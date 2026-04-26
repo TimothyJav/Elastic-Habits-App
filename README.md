@@ -20,9 +20,9 @@ Zapraszamy do zapoznania się z README dokumentacji.
 *Cel: Uruchomienie działającej aplikacji w 3 dni w celu walidacji "Momentu AHA".*
 
 ### 1. Fundamenty (Dzień 1)
- - [x] Analiza ryzyk i priorytetyzacja (ICE Ranking) – **jest zrobione**
- - [x] Inicjalizacja projektu Next.js 14 + TailwindCSS – **jest zrobione**
- - [x] Konfiguracja Supabase (Auth + Baza Danych) – **zrealizowane (Schema SQL + Client setup)**
+ - [x] Analiza ryzyk i priorytetyzacja (ICE Ranking) – **zakończone**
+ - [x] Inicjalizacja projektu Next.js 14 + TailwindCSS – **zakończone**
+ - [x] Konfiguracja Supabase (Auth + Baza Danych) – **zakończone**
 
 ### 2. Mechaniczne Serce (Dzień 2)
  - [/] UI "Emergency Switch" (Główny przycisk zmiany poziomu nawyku) – **w trakcie (Komponent bazowy)**
