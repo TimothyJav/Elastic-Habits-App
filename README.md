@@ -21,7 +21,7 @@ Zapraszamy do zapoznania się z README dokumentacji.
 
 ### 1. Fundamenty (Dzień 1)
  - [x] Analiza ryzyk i priorytetyzacja (ICE Ranking) – **jest zrobione**
- - [ ] Inicjalizacja projektu Next.js 14 + TailwindCSS – **jest do zrobienia**
+ - [x] Inicjalizacja projektu Next.js 14 + TailwindCSS – **jest zrobione**
  - [ ] Konfiguracja Supabase (Auth + Baza Danych) – **jest do zrobienia**
 
 ### 2. Mechaniczne Serce (Dzień 2)
