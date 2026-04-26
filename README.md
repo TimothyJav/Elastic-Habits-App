@@ -22,10 +22,10 @@ Zapraszamy do zapoznania się z README dokumentacji.
 ### 1. Fundamenty (Dzień 1)
  - [x] Analiza ryzyk i priorytetyzacja (ICE Ranking) – **jest zrobione**
  - [x] Inicjalizacja projektu Next.js 14 + TailwindCSS – **jest zrobione**
- - [ ] Konfiguracja Supabase (Auth + Baza Danych) – **jest do zrobienia**
+ - [x] Konfiguracja Supabase (Auth + Baza Danych) – **zrealizowane (Schema SQL + Client setup)**
 
 ### 2. Mechaniczne Serce (Dzień 2)
- - [ ] UI "Emergency Switch" (Główny przycisk zmiany poziomu nawyku) – **jest do zrobienia**
+ - [/] UI "Emergency Switch" (Główny przycisk zmiany poziomu nawyku) – **w trakcie (Komponent bazowy)**
  - [ ] Logika "No-Shame Streak" (DB: zapisywanie postępu bez kary za mały wysiłek) – **jest do zrobienia**
  - [ ] Implementacja 20 gotowych szablonów "Emergency" (zamiast AI na start) – **jest do zrobienia**
 
