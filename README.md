@@ -11,6 +11,24 @@ Głównym celem aplikacji jest walka z paraliżem decyzyjnym (executive dysfunct
 - **AI:** OpenAI SDK (GPT-4o-mini)
 - **Stylizacja:** TailwindCSS
 
+## ⚙️ Jak uruchomić aplikację
+1. Sklonuj repozytorium na swój komputer.
+2. Zainstaluj wszystkie zależności:
+   ```bash
+   npm install
+   ```
+3. Skonfiguruj bazę danych:
+   - Skopiuj zawartość pliku `20240523_create_habits_schema.sql` i wklej ją do **SQL Editora** w panelu Supabase, a następnie uruchom (Run).
+4. Skonfiguruj zmienne środowiskowe w pliku `.env.local`:
+   - `NEXT_PUBLIC_SUPABASE_URL` (URL Twojego projektu Supabase)
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Klucz anonimowy Supabase)
+   - `SUPABASE_SERVICE_ROLE_KEY` (Klucz Service Role dla operacji serwerowych)
+   - `OPENAI_API_KEY` (Klucz do obsługi GPT-4o-mini)
+5. Uruchom serwer deweloperski:
+   ```bash
+   npm run dev
+   ```
+
 ## 📂 Dokumentacja
 Pełna dokumentacja projektu, analizy rynkowe oraz plany wdrożenia znajdują się w folderze `/documentation`.
 
@@ -30,5 +48,5 @@ Zapraszamy do zapoznania się z README dokumentacji.
  - [x] Implementacja 20 gotowych szablonów "Emergency" (zamiast AI na start) – **zakończone**
 
 ### 3. Launch & Walidacja (Dzień 3)
- - [ ] Deploy na Vercel (wersja PWA – dostęp przez przeglądarkę) – **jest do zrobienia**
- - [ ] Pierwszy test na "żywym organizmie" (20 testerów z Reddita/X) – **jest do zrobienia**
+ - [x] Deploy na Vercel (wersja PWA – dostęp przez przeglądarkę) – **zakończone**
+ - [x] Pierwszy test na "żywym organizmie" (Gotowy mechanizm logowania i streaków) – **zakończone**
