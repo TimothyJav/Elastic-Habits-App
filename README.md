@@ -25,9 +25,9 @@ Zapraszamy do zapoznania się z README dokumentacji.
  - [x] Konfiguracja Supabase (Auth + Baza Danych) – **zakończone**
 
 ### 2. Mechaniczne Serce (Dzień 2)
- - [/] UI "Emergency Switch" (Główny przycisk zmiany poziomu nawyku) – **w trakcie (Komponent bazowy)**
- - [ ] Logika "No-Shame Streak" (DB: zapisywanie postępu bez kary za mały wysiłek) – **jest do zrobienia**
- - [ ] Implementacja 20 gotowych szablonów "Emergency" (zamiast AI na start) – **jest do zrobienia**
+ - [x] UI "Emergency Switch" (Główny przycisk zmiany poziomu nawyku) – **zakończone**
+ - [x] Logika "No-Shame Streak" (DB: zapisywanie postępu bez kary za mały wysiłek) – **zakończone**
+ - [x] Implementacja 20 gotowych szablonów "Emergency" (zamiast AI na start) – **zakończone**
 
 ### 3. Launch & Walidacja (Dzień 3)
  - [ ] Deploy na Vercel (wersja PWA – dostęp przez przeglądarkę) – **jest do zrobienia**

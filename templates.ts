@@ -1,0 +1,22 @@
+export const EMERGENCY_TEMPLATES = [
+  { title: "Medytacja", full: "20 minut", adjusted: "5 minut", emergency: "1 świadomy oddech" },
+  { title: "Trening", full: "1 godzina siłowni", adjusted: "15 min rozciągania", emergency: "10 pajacyków" },
+  { title: "Czytanie", full: "30 stron", adjusted: "5 stron", emergency: "1 zdanie" },
+  { title: "Kodowanie", full: "3 godziny", adjusted: "30 minut", emergency: "Otwarcie IDE" },
+  { title: "Dziennik", full: "Strona A4", adjusted: "3 punkty wdzięczności", emergency: "1 słowo o nastroju" },
+  { title: "Sprzątanie", full: "Posprzątanie pokoju", adjusted: "Ułożenie ubrań", emergency: "Podniesienie 1 rzeczy" },
+  { title: "Woda", full: "2.5 Litra", adjusted: "1 Litr", emergency: "1 łyk wody" },
+  { title: "Nauka języka", full: "1 lekcja + powtórki", adjusted: "5 minut w aplikacji", emergency: "1 nowe słówko" },
+  { title: "Spacer", full: "10 000 kroków", adjusted: "2 000 kroków", emergency: "Wyjście przed próg" },
+  { title: "Pielęgnacja", full: "Pełna rutyna (10 kroków)", adjusted: "Mycie i krem", emergency: "Przemycie twarzy wodą" },
+  { title: "Planowanie", full: "Plan tygodnia", adjusted: "Plan jutra", emergency: "Zapisanie 1 priorytetu" },
+  { title: "Social Media", full: "Detoks cały dzień", adjusted: "Max 30 min", emergency: "Usunięcie 1 apki scrollującej" },
+  { title: "Instrument", full: "45 min ćwiczeń", adjusted: "15 min grania", emergency: "Zagranie 1 gamy" },
+  { title: "Praca głęboka", full: "90 min bez rozpraszaczy", adjusted: "25 min Pomodoro", emergency: "5 min skupienia" },
+  { title: "Budżet", full: "Analiza wszystkich wydatków", adjusted: "Spisanie paragonów", emergency: "Sprawdzenie salda" },
+  { title: "Witaminy", full: "Wszystkie suplementy", adjusted: "Tylko najważniejsze", emergency: "Wypicie szklanki wody" },
+  { title: "Pocztą", full: "Inbox Zero", adjusted: "Odpowiedź na 5 maili", emergency: "Usunięcie 1 spamu" },
+  { title: "Gotowanie", full: "Pełny zdrowy posiłek", adjusted: "Szybka sałatka", emergency: "Zjedzenie 1 owocu" },
+  { title: "Sen", full: "8h snu (bez ekranu przed)", adjusted: "7h snu", emergency: "Ustawienie budzika o stałej porze" },
+  { title: "Relacje", full: "Długa rozmowa z bliskim", adjusted: "Szybki telefon", emergency: "Wysłanie SMS-a 'Hej'" }
+];
