@@ -15,3 +15,20 @@ Głównym celem aplikacji jest walka z paraliżem decyzyjnym (executive dysfunct
 Pełna dokumentacja projektu, analizy rynkowe oraz plany wdrożenia znajdują się w folderze `/documentation`.
 
 Zapraszamy do zapoznania się z README dokumentacji.
+
+## 🗺️ Plan Szybkiego Wdrożenia (Express MVP)
+*Cel: Uruchomienie działającej aplikacji w 3 dni w celu walidacji "Momentu AHA".*
+
+### 1. Fundamenty (Dzień 1)
+ - [x] Analiza ryzyk i priorytetyzacja (ICE Ranking) – **jest zrobione**
+ - [ ] Inicjalizacja projektu Next.js 14 + TailwindCSS – **jest do zrobienia**
+ - [ ] Konfiguracja Supabase (Auth + Baza Danych) – **jest do zrobienia**
+
+### 2. Mechaniczne Serce (Dzień 2)
+ - [ ] UI "Emergency Switch" (Główny przycisk zmiany poziomu nawyku) – **jest do zrobienia**
+ - [ ] Logika "No-Shame Streak" (DB: zapisywanie postępu bez kary za mały wysiłek) – **jest do zrobienia**
+ - [ ] Implementacja 20 gotowych szablonów "Emergency" (zamiast AI na start) – **jest do zrobienia**
+
+### 3. Launch & Walidacja (Dzień 3)
+ - [ ] Deploy na Vercel (wersja PWA – dostęp przez przeglądarkę) – **jest do zrobienia**
+ - [ ] Pierwszy test na "żywym organizmie" (20 testerów z Reddita/X) – **jest do zrobienia**
