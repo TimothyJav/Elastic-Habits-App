@@ -13,6 +13,7 @@ Ten dokument definiuje ustandaryzowany proces pracy dla agenta AI wspierającego
 Przy każdym nowym zadaniu (Feature/Bug), Agent musi przejść przez następujące kroki:
 
 ### Krok 1: Analiza Kontekstu (Context Discovery)
+- Przeczytaj `documentation/persona.md`, aby nastroić się na wartości projektu.
 - Sprawdź `documentation/ice-ranking.md`, aby upewnić się, że zadanie ma wysoki priorytet.
 - Odnieś się do `documentation/kill-the-idea-elastic-habits.md`, aby sprawdzić, czy rozwiązanie nie wpada w opisane pułapki (np. zbyt skomplikowane AI).
 
