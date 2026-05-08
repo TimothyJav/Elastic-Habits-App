@@ -29,3 +29,44 @@ export async function logHabitCompletion(
   revalidatePath('/dashboard');
   return data;
 }
+
+export async function createHabit(formData: {
+  userId: string;
+  title: string;
+  fullGoal: string;
+  adjustedGoal: string;
+  emergencyGoal: string;
+}) {
+  const { data, error } = await supabase
+    .from('habits')
+    .insert([
+      {
+        user_id: formData.userId,
+        title: formData.title,
+        full_goal: formData.fullGoal,
+        adjusted_goal: formData.adjustedGoal,
+        emergency_goal: formData.emergencyGoal,
+      },
+    ])
+    .select();
+
+  if (error) throw new Error(error.message);
+  revalidatePath('/dashboard');
+  return data;
+}
+
+export async function getHabits(userId: string) {
+  const { data, error } = await supabase
+    .from('habits')
+    .select(`
+      *,
+      habit_logs (
+        level_achieved,
+        completed_at
+      )
+    `)
+    .eq('user_id', userId);
+
+  if (error) throw new Error(error.message);
+  return data;
+}
