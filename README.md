@@ -1,9 +1,23 @@
-# Elastic Habits (ADHD-Friendly)
+# Elastic Habits (ADHD-Friendly) 🧠
 
-Elastic Habits to aplikacja SaaS zaprojektowana z myślą o osobach z ADHD, która pomaga budować nawyki poprzez adaptacyjne skalowanie trudności zadań.
+Elastic Habits to aplikacja SaaS zaprojektowana z myślą o osobach z ADHD, która pomaga budować nawyki poprzez adaptacyjne skalowanie trudności zadań. Repozytorium jest zarządzane zgodnie z metodologią **Spec Driven Development (SDD)**.
+
+## 📂 Dokumentacja Projektowa (Single Source of Truth)
+Kompletna dokumentacja projektu znajduje się w folderze `/docs`.
 
 ## 🚀 O Projekcie
 Głównym celem aplikacji jest walka z paraliżem decyzyjnym (executive dysfunction) dzięki funkcji **Emergency Mode**, która pozwala na wykonanie absolutnego minimum w gorsze dni, zachowując przy tym ciągłość nawyku (streak).
+
+## Struktura katalogów
+- `/architecture`: Decyzje architektoniczne (ADR) i schematy systemu.
+- `/business`: Cele biznesowe, User Stories i analiza rynku.
+- `/tech`: Stack technologiczny i konwencje kodowania.
+- `/plans`: Pliki specyfikacji funkcjonalnych (PLAN_*.md).
+- `/roles`: Wytyczne i kontekst dla poszczególnych ról (PO, UX, Architect, Dev, Tester).
+
+## 📊 Rejestry SDD
+- Implemented Plans
+- Implemented Features
 
 ## 🛠 Tech Stack
 - **Frontend/Backend:** Next.js 14 (App Router)
@@ -28,11 +42,6 @@ Głównym celem aplikacji jest walka z paraliżem decyzyjnym (executive dysfunct
    ```bash
    npm run dev
    ```
-
-## 📂 Dokumentacja
-Pełna dokumentacja projektu, analizy rynkowe oraz plany wdrożenia znajdują się w folderze `/documentation`.
-
-Zapraszamy do zapoznania się z README dokumentacji.
 
 ## 🗺️ Plan Szybkiego Wdrożenia (Express MVP)
 *Cel: Uruchomienie działającej aplikacji w 3 dni w celu walidacji "Momentu AHA".*
