@@ -1,7 +1,7 @@
 'use client';
 
-import { EmergencySwitch } from '../../EmergencySwitch';
-import { logHabitCompletion } from '../../habitActions';
+import { EmergencySwitch } from './EmergencySwitch';
+import { logHabitCompletion } from './habitActions';
 import { toast } from 'sonner';
 
 interface Habit {
