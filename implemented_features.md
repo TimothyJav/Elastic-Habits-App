@@ -38,3 +38,8 @@
 ## Testy Walidacyjne
 - **Status:** Wykonane
 - **Opis:** Pierwszy test na "żywym organizmie" - gotowy mechanizm logowania i streaków.
+
+## AI Scaling Integration
+- **Status:** Wykonane
+- **Plan:** `PLAN_ai_scaling_integration.md`
+- **Opis:** Hook `useAISuggestions` z fallback offline do sugerowania Emergency goals.
