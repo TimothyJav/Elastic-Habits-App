@@ -2,17 +2,27 @@
 
 ## Persona: ADHD User (Alex)
 - **Age:** 25-35
-- **Problem:** Paraliż decyzyjny, niska energia w gorsze dni
-- **Goal:** Budowanie nawyków bez poczucia wstydu
+- **Problem:** Paraliż decyzyjny, niska energia w gorsze dni, wstyd przy niepełnieniu planów
+- **Goal:** Budowanie nawyków bez poczucia wstydu, celebracja małych postępów
 
-## Stories
+## User Stories - Core Flow
 
-### Core Flow
-- **Jako Alex, chcę** mieć przycisk "Emergency" aby zrobić minimum w złym dniu
-- **Jako Alex, chcę** widzieć swój streak aby mieć motywację
-- **Jako Alex, chcę** żeby streak się nie resetował przy Emergency
+### Emergency Mode
+1. **Jako Alex, chcę** mieć przycisk "Emergency" aby zrobić minimum w złym dniu
+2. **Jako Alex, chcę** aby Emergency było celebracjonowane jako sukces
+3. **Jako Alex, chcę** mieć predefiniowane szablony Emergency (20 sztuk)
 
-### UX Requirements
-- **Jako Alex, chcę** aplikację działającą w 1 sekundzie
-- **Jako Alex, chcę** mieć 20 gotowych szablonów Emergency
-- **Jako Alex, chcę** celebracji każdego ukończenia (nawet Emergency)
+### Progress Tracking
+1. **Jako Alex, chcę** widzieć swój streak aby mieć motywację
+2. **Jako Alex, chcę** żeby streak się nie resetował przy Emergency
+3. **Jako Alex, chcę** wizualizacji postępów (wykres/kalendarz)
+
+### Performance
+1. **Jako Alex, chcę** aplikację działającą w < 1 sekundę
+2. **Jako Alex, chcę** minimalnej konfiguracji (zero tarcia)
+3. **Jako Alex, chcę** trybu offline-first
+
+## Acceptance Criteria
+- Brak przycisku "Reset streak"
+- Kolor zielony dla poziomu Emergency
+- Zero komunikatów o "porażkach"
