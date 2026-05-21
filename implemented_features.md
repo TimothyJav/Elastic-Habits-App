@@ -21,3 +21,8 @@
 ## Szablony Emergency
 - **Status:** Wykonane
 - **Opis:** 20 predefiniowanych wersji "Emergency" dla popularnych nawyków, służących jako fallback dla AI.
+
+## Dashboard Wizualizacji
+- **Status:** Wykonane
+- **Plan:** `PLAN_dashboard_visualization.md`
+- **Opis:** Komponenty `HabitChart`, `StreakCalendar`, `WeeklySummary` do wyświetlania postępów nawyków.
