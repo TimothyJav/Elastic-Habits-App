@@ -2,11 +2,11 @@
 
 Elastic Habits to aplikacja SaaS zaprojektowana z myślą o osobach z ADHD, która pomaga budować nawyki poprzez adaptacyjne skalowanie trudności zadań. Repozytorium jest zarządzane zgodnie z metodologią **Spec Driven Development (SDD)**.
 
-## 📂 Dokumentacja Projektowa (Single Source of Truth)
-Kompletna dokumentacja projektu znajduje się w folderze `/docs`.
-
 ## 🚀 O Projekcie
 Głównym celem aplikacji jest walka z paraliżem decyzyjnym (executive dysfunction) dzięki funkcji **Emergency Mode**, która pozwala na wykonanie absolutnego minimum w gorsze dni, zachowując przy tym ciągłość nawyku (streak).
+
+## 📂 Dokumentacja Projektowa (Single Source of Truth)
+Kompletna dokumentacja projektu znajduje się w folderze `/docs`.
 
 ## Struktura katalogów
 - `/architecture`: Decyzje architektoniczne (ADR) i schematy systemu.
@@ -58,19 +58,3 @@ Jeśli jesteś programistą i chcesz uruchomić ten projekt lokalnie do celów r
    - 5.2 Wpisz komendę `npm run dev` i naciśnij Enter.
    - 5.3 Otwórz przeglądarkę internetową i wpisz adres `http://localhost:3000`. Twoja aplikacja powinna już tam działać!
 
-## 🗺️ Plan Szybkiego Wdrożenia (Express MVP)
-*Cel: Uruchomienie działającej aplikacji w 3 dni w celu walidacji "Momentu AHA".*
-
-### 1. Fundamenty (Dzień 1)
- - [x] Analiza ryzyk i priorytetyzacja (ICE Ranking) – **zakończone**
- - [x] Inicjalizacja projektu Next.js 14 + TailwindCSS – **zakończone**
- - [x] Konfiguracja Supabase (Auth + Baza Danych) – **zakończone**
-
-### 2. Mechaniczne Serce (Dzień 2)
- - [x] UI "Emergency Switch" (Główny przycisk zmiany poziomu nawyku) – **zakończone**
- - [x] Logika "No-Shame Streak" (DB: zapisywanie postępu bez kary za mały wysiłek) – **zakończone**
- - [x] Implementacja 20 gotowych szablonów "Emergency" (zamiast AI na start) – **zakończone**
-
-### 3. Launch & Walidacja (Dzień 3)
- - [x] Deploy na Vercel (wersja PWA – dostęp przez przeglądarkę) – **zakończone**
- - [x] Pierwszy test na "żywym organizmie" (Gotowy mechanizm logowania i streaków) – **zakończone**
