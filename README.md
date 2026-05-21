@@ -29,7 +29,7 @@ Głównym celem aplikacji jest walka z paraliżem decyzyjnym (executive dysfunct
 
 ## 🚀 Demo i Wersja Produkcyjna
 Jeśli chcesz po prostu przetestować aplikację jako użytkownik, nie musisz niczego instalować. 
-Aplikacja jest dostępna pod adresem: **[TUTAJ WKLEJ LINK DO VERCEL]**
+Aplikacja jest dostępna pod adresem: **[https://elastic-habits-app.vercel.app/](https://elastic-habits-app.vercel.app/)**
 
 ## 🛠️ Konfiguracja lokalna (Dla Deweloperów)
 Jeśli jesteś programistą i chcesz uruchomić ten projekt lokalnie do celów rozwojowych, wykonaj poniższe kroki:
