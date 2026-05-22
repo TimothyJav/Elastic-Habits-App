@@ -1,6 +1,6 @@
 import { EMERGENCY_TEMPLATES } from '../templates';
 
-function suggestEmergencyGoal(habitTitle: string): { title: string; goal: string } | null {
+export function suggestEmergencyGoal(habitTitle: string): { title: string; goal: string } | null {
   const searchTerm = habitTitle.toLowerCase();
   
   for (const template of EMERGENCY_TEMPLATES) {

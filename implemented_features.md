@@ -35,9 +35,13 @@
 - **Status:** Wykonane
 - **Opis:** Aplikacja wdrożona jako PWA dostępna pod adresem https://elastic-habits-app.vercel.app/
 
-## Testy Walidacyjne
+## Testy Jednostkowe (Vitest)
 - **Status:** Wykonane
-- **Opis:** Pierwszy test na "żywym organizmie" - gotowy mechanizm logowania i streaków.
+- **Opis:** 9 testów przechodzących: 5 dla `streak-utils.ts`, 4 dla `lib/ai-scaling.ts`. Pokrycie logiki No-Shame Streak i fallback szablonów offline.
+
+## CI/CD Validation Scripts
+- **Status:** Wykonane
+- **Opis:** Dodano `npm run typecheck` (`tsc --noEmit`) i `npm run test` (`vitest run`) do `package.json`. Walidacja typów i testy uruchamiane oddzielnie od builda.
 
 ## AI Scaling Integration
 - **Status:** Wykonane

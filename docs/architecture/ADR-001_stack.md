@@ -26,6 +26,13 @@ Wybrano Next.js 14 (App Router) + Supabase jako stack:
 - Gotowy system autoryzacji
 - Realtime subscriptions
 
+### Architecture Overview
+```
+[Browser] → [Next.js App Router] → [Supabase API]
+                                    ↓
+                              [PostgreSQL + RLS]
+```
+
 ### Consequences
 Pozytywne:
 - Szybki development dzięki integracji
