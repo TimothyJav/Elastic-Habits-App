@@ -32,8 +32,8 @@ export function EmergencySwitch({ currentLevel, onLevelChange, goals }: Emergenc
   ];
 
   return (
-    <div className="w-full max-w-md p-4 bg-white rounded-2xl shadow-sm border border-slate-100">
-      <h3 className="text-lg font-bold text-slate-800 mb-4">Habit Levels</h3>
+    <div className="w-full bg-slate-800/60 rounded-2xl shadow-xl border border-slate-700 p-4">
+      <h3 className="text-lg font-bold text-white mb-4">Wybierz poziom</h3>
       
       <div className="flex flex-col gap-3">
         {levels.map((level) => (
@@ -45,7 +45,7 @@ export function EmergencySwitch({ currentLevel, onLevelChange, goals }: Emergenc
               "border-2",
               currentLevel === level.id 
                 ? `${level.color} border-transparent text-white` 
-                : "border-slate-100 bg-slate-50 text-slate-600 hover:border-slate-200"
+                : "border-slate-600 bg-slate-700/50 text-slate-300 hover:border-slate-500"
             )}
           >
             <div className="flex justify-between w-full items-center">
@@ -53,7 +53,7 @@ export function EmergencySwitch({ currentLevel, onLevelChange, goals }: Emergenc
                 {level.label}
               </span>
               {currentLevel === level.id && (
-                <span className="text-xs bg-white/20 px-2 py-1 rounded">Selected</span>
+                <span className="text-xs bg-white/20 px-2 py-1 rounded">Wybrano</span>
               )}
             </div>
             <p className="text-sm mt-1 text-left font-medium">
