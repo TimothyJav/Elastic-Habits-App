@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const navItems = [
-  { href: "/", label: "Home", icon: "🏠" },
+  { href: "/", label: "Start", icon: "🏠" },
   { href: "/dashboard", label: "Tablica", icon: "📊" },
 ];
 

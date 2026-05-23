@@ -1,10 +1,11 @@
-import { getHabits } from '../../habitActions';
-import HabitChart from '../../HabitChart';
-import StreakCalendar from '../../StreakCalendar';
-import WeeklySummary from '../../WeeklySummary';
+import { getHabits } from '@/lib/habitActions';
+import HabitChart from '@/components/HabitChart';
+import StreakCalendar from '@/components/StreakCalendar';
+import WeeklySummary from '@/components/WeeklySummary';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import HabitList from '@/components/HabitList';
 
 export const dynamic = 'force-dynamic';
 
@@ -56,7 +57,7 @@ export default async function ProgressBoardPage() {
       <div className="space-y-6">
         <section>
           <h2 className="text-lg font-semibold text-white mb-3">Twoje nawyki</h2>
-          <HabitList habits={habits} />
+          <HabitList habits={habits} userId="demo-user" />
         </section>
 
         <section className="border-t border-slate-800 pt-6">
@@ -71,32 +72,6 @@ export default async function ProgressBoardPage() {
           <StreakCalendar logs={allLogs} />
         </section>
       </div>
-    </div>
-  );
-}
-
-function HabitList({ habits }: { habits: any[] }) {
-  return (
-    <div className="space-y-4">
-      {habits.map(habit => (
-        <Card key={habit.id} className="border-l-4 border-primary-600">
-          <h3 className="font-bold text-lg text-white">{habit.title}</h3>
-          <div className="text-sm text-slate-400 mt-2 space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-              <span>Full: {habit.full_goal}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-secondary-500 rounded-full"></span>
-              <span>Adjusted: {habit.adjusted_goal}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
-              <span>Emergency: {habit.emergency_goal}</span>
-            </div>
-          </div>
-        </Card>
-      ))}
     </div>
   );
 }

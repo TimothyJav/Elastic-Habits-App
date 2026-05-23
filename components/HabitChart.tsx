@@ -19,9 +19,9 @@ export default function HabitChart({ logs }: HabitChartProps) {
         {['full', 'adjusted', 'emergency'].map(level => {
           const height = (counts[level as keyof typeof counts] / maxCount) * 100;
           const colors = {
-            full: 'bg-green-500',
-            adjusted: 'bg-yellow-500',
-            emergency: 'bg-green-700',
+            full: 'bg-purple-600',
+            adjusted: 'bg-blue-600',
+            emergency: 'bg-green-600',
           };
           return (
             <div key={level} className="flex-1 flex flex-col items-center">

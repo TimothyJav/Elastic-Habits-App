@@ -1,7 +1,8 @@
 'use client';
 
-import { EmergencySwitch } from './EmergencySwitch';
-import { logHabitCompletion } from './habitActions';
+import { useState } from 'react';
+import { EmergencySwitch } from '@/components/EmergencySwitch';
+import { logHabitCompletion } from '@/lib/habitActions';
 import { toast } from 'sonner';
 
 interface Habit {
@@ -14,8 +15,11 @@ interface Habit {
 }
 
 export default function HabitList({ habits, userId }: { habits: Habit[], userId: string }) {
+  const [currentLevels, setCurrentLevels] = useState<Record<string, 'full' | 'adjusted' | 'emergency'>>({});
+
   const handleLevelChange = async (habitId: string, level: 'full' | 'adjusted' | 'emergency') => {
     try {
+      setCurrentLevels(prev => ({ ...prev, [habitId]: level }));
       await logHabitCompletion(habitId, userId, level);
       toast.success(`Zaliczono poziom ${level.toUpperCase()}!`);
     } catch (error) {
@@ -37,7 +41,7 @@ export default function HabitList({ habits, userId }: { habits: Habit[], userId:
         <div key={habit.id} className="space-y-2">
           <h3 className="text-lg font-bold text-slate-800 ml-1">{habit.title}</h3>
           <EmergencySwitch 
-            currentLevel="full" // W realnej apce: pobierz ostatni log z dzisiaj
+            currentLevel={currentLevels[habit.id] || 'full'}
             goals={{ full: habit.full_goal, adjusted: habit.adjusted_goal, emergency: habit.emergency_goal }}
             onLevelChange={(level) => handleLevelChange(habit.id, level)}
           />

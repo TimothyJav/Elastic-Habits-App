@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
-import { generateHabitLevels } from './generate-habit-levels';
-import { createHabit } from './habitActions';
-import { useAISuggestions } from './lib/ai-scaling';
+import { generateHabitLevels } from '@/components/generate-habit-levels';
+import { createHabit } from '@/lib/habitActions';
+import { useAISuggestions } from '@/lib/ai-scaling';
 
 export default function AddHabitForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState('');

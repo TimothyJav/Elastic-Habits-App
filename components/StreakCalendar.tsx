@@ -20,9 +20,9 @@ export default function StreakCalendar({ logs }: StreakCalendarProps) {
     const level = dates[dateStr];
     
     const bgColors = {
-      full: 'bg-green-500',
-      adjusted: 'bg-yellow-500',
-      emergency: 'bg-green-700',
+      full: 'bg-purple-600',
+      adjusted: 'bg-blue-600',
+      emergency: 'bg-green-600',
     };
 
     days.push(
