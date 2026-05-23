@@ -21,7 +21,7 @@ export function calculateStreak(logs: { completed_at: string }[]): number {
     const currentDate = new Date(sortedDates[i]);
     currentDate.setHours(0, 0, 0, 0);
 
-    if (i === 0 || (new Date(sortedDates[i-1]).getTime() - currentDate.getTime()) / (1000 * 3600 * 24) <= 1) {
+    if (i === 0 || Math.floor((new Date(sortedDates[i-1]).getTime() - currentDate.getTime()) / (1000 * 3600 * 24)) <= 1) {
       currentStreak++;
     } else {
       break;

@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import { generateHabitLevels } from './generate-habit-levels';
 import { createHabit } from './habitActions';
+import { useAISuggestions } from './lib/ai-scaling';
 
 export default function AddHabitForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState('');
@@ -19,7 +20,14 @@ export default function AddHabitForm({ userId }: { userId: string }) {
       const generated = await generateHabitLevels(title);
       setLevels(generated);
     } catch (error) {
-      toast.error("Wystąpił błąd podczas generowania przez AI.");
+      const { suggestEmergencyGoal } = useAISuggestions();
+      const suggestion = suggestEmergencyGoal(title);
+      if (suggestion) {
+        setLevels({ full: title, adjusted: suggestion.goal, emergency: suggestion.goal });
+        toast.info('Użyto szablonu offline');
+      } else {
+        toast.error("Wystąpił błąd podczas generowania przez AI.");
+      }
     } finally {
       setIsLoading(false);
     }
