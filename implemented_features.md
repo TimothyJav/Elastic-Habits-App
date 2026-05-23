@@ -47,3 +47,7 @@
 - **Status:** Wykonane
 - **Plan:** `PLAN_ai_scaling_integration.md`
 - **Opis:** Hook `useAISuggestions` z fallback offline do sugerowania Emergency goals.
+
+## Modernizacja UI (PLAN_ui_modernization.md)
+- **Status:** Wykonane
+- **Opis:** Nowoczesny design system z ADHD-friendly kolorkami, komponenty Button/Card/Skeleton, bottom navigation dla mobile.

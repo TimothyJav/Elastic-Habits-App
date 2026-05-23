@@ -26,26 +26,27 @@ export function EmergencySwitch({ currentLevel, onLevelChange, goals }: Emergenc
   };
 
   const levels = [
-    { id: 'full' as const, label: 'Full', desc: goals.full, color: 'bg-green-500' },
-    { id: 'adjusted' as const, label: 'Adjusted', desc: goals.adjusted, color: 'bg-blue-500' },
-    { id: 'emergency' as const, label: 'Emergency', desc: goals.emergency, color: 'bg-amber-500' },
+    { id: 'full' as const, label: 'Full', desc: goals.full, color: 'bg-primary-600' },
+    { id: 'adjusted' as const, label: 'Adjusted', desc: goals.adjusted, color: 'bg-secondary-600' },
+    { id: 'emergency' as const, label: 'Emergency', desc: goals.emergency, color: 'bg-emergency-600' },
   ];
 
   return (
     <div className="w-full bg-slate-800/60 rounded-2xl shadow-xl border border-slate-700 p-4">
       <h3 className="text-lg font-bold text-white mb-4">Wybierz poziom</h3>
       
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 gap-3">
         {levels.map((level) => (
           <button
             key={level.id}
             onClick={() => handleLog(level.id)}
             className={cn(
-              "relative flex flex-col items-start p-4 rounded-xl transition-all active:scale-[0.98]",
-              "border-2",
+              "relative flex flex-col items-start p-4 rounded-xl transition-all",
+              "border-2 min-h-[56px]",
               currentLevel === level.id 
                 ? `${level.color} border-transparent text-white` 
-                : "border-slate-600 bg-slate-700/50 text-slate-300 hover:border-slate-500"
+                : "border-slate-600 bg-slate-700/50 text-slate-300 hover:border-slate-500",
+              "motion-safe:active:scale-[0.98] motion-safe:hover:scale-[1.02]"
             )}
           >
             <div className="flex justify-between w-full items-center">

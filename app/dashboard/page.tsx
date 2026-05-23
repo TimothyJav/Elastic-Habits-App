@@ -3,6 +3,9 @@ import HabitChart from '../../HabitChart';
 import StreakCalendar from '../../StreakCalendar';
 import WeeklySummary from '../../WeeklySummary';
 import Link from 'next/link';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,12 +27,21 @@ export default async function DashboardPage() {
 
   if (habits?.length === 0) {
     return (
-      <div className="p-8">
-        <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-        <div className="text-center p-10 border-2 border-dashed rounded-2xl text-slate-400">
-          Nie masz jeszcze żadnych nawyków. Dodaj pierwszy, aby zobaczyć statystyki.
-        </div>
-        <Link href="/" className="mt-4 inline-block text-blue-600 hover:underline">
+      <div className="p-4 sm:p-8">
+        <header className="mb-6">
+          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+        </header>
+        
+        <Card variant="elevated" className="text-center py-12">
+          <div className="text-6xl mb-4">🎯</div>
+          <h2 className="text-xl font-semibold text-white mb-2">Brak nawyków</h2>
+          <p className="text-slate-400 mb-6">Dodaj swój pierwszy nawyk, aby zobaczyć postępy!</p>
+          <Link href="/">
+            <Button>Dodaj nawyk</Button>
+          </Link>
+        </Card>
+        
+        <Link href="/" className="mt-6 inline-block text-primary-400 hover:underline">
           ← Powrót do nawyków
         </Link>
       </div>
@@ -37,24 +49,26 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="p-8 max-w-4xl">
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+    <div className="p-4 sm:p-8 max-w-4xl">
+      <header className="mb-6">
+        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+      </header>
       
       <div className="space-y-6">
         <section>
-          <h2 className="text-lg font-semibold mb-3">Twoje nawyki</h2>
+          <h2 className="text-lg font-semibold text-white mb-3">Twoje nawyki</h2>
           <HabitList habits={habits} />
         </section>
 
-        <section className="border-t pt-6">
+        <section className="border-t border-slate-800 pt-6">
           <WeeklySummary logs={allLogs} />
         </section>
 
-        <section className="border-t pt-6">
+        <section className="border-t border-slate-800 pt-6">
           <HabitChart logs={allLogs} />
         </section>
 
-        <section className="border-t pt-6">
+        <section className="border-t border-slate-800 pt-6">
           <StreakCalendar logs={allLogs} />
         </section>
       </div>
@@ -66,14 +80,23 @@ function HabitList({ habits }: { habits: any[] }) {
   return (
     <div className="space-y-4">
       {habits.map(habit => (
-        <div key={habit.id} className="border rounded-lg p-4">
-          <h3 className="font-bold text-lg">{habit.title}</h3>
-          <div className="text-sm text-slate-600 mt-2">
-            <div>Full: {habit.full_goal}</div>
-            <div>Adjusted: {habit.adjusted_goal}</div>
-            <div>Emergency: {habit.emergency_goal}</div>
+        <Card key={habit.id} className="border-l-4 border-primary-600">
+          <h3 className="font-bold text-lg text-white">{habit.title}</h3>
+          <div className="text-sm text-slate-400 mt-2 space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
+              <span>Full: {habit.full_goal}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-secondary-500 rounded-full"></span>
+              <span>Adjusted: {habit.adjusted_goal}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-emergency-500 rounded-full"></span>
+              <span>Emergency: {habit.emergency_goal}</span>
+            </div>
           </div>
-        </div>
+        </Card>
       ))}
     </div>
   );
