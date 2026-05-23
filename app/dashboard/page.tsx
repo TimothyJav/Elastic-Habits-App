@@ -5,7 +5,6 @@ import WeeklySummary from '../../WeeklySummary';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,7 +26,7 @@ export default async function DashboardPage() {
 
   if (habits?.length === 0) {
     return (
-      <div className="p-4 sm:p-8">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-4 sm:p-8">
         <header className="mb-6">
           <h1 className="text-2xl font-bold text-white">Dashboard</h1>
         </header>
@@ -49,7 +48,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="p-4 sm:p-8 max-w-4xl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-4 sm:p-8 max-w-4xl">
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
       </header>
@@ -84,7 +83,7 @@ function HabitList({ habits }: { habits: any[] }) {
           <h3 className="font-bold text-lg text-white">{habit.title}</h3>
           <div className="text-sm text-slate-400 mt-2 space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
               <span>Full: {habit.full_goal}</span>
             </div>
             <div className="flex items-center gap-2">
@@ -92,7 +91,7 @@ function HabitList({ habits }: { habits: any[] }) {
               <span>Adjusted: {habit.adjusted_goal}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-emergency-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
               <span>Emergency: {habit.emergency_goal}</span>
             </div>
           </div>

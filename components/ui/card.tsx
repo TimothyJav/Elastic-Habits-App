@@ -11,11 +11,11 @@ export function Card({ className, variant = 'default', children, ...props }: Car
   return (
     <div
       className={cn(
-        'rounded-2xl p-4 sm:p-6',
+        'rounded-2xl p-4 sm:p-6 transition-all',
         {
-          'bg-slate-800/50 border border-slate-700': variant === 'default',
-          'bg-slate-800 border border-slate-600 shadow-xl': variant === 'elevated',
-          'bg-slate-800/30 backdrop-blur border border-slate-700/50': variant === 'glass',
+          'bg-slate-800/60 backdrop-blur border border-slate-700/50 shadow-xl': variant === 'default',
+          'bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700 shadow-2xl': variant === 'elevated',
+          'bg-slate-800/30 backdrop-blur-md border border-slate-700/30': variant === 'glass',
         },
         className
       )}
