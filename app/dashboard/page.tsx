@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 
 export const dynamic = 'force-dynamic';
 
-export default async function DashboardPage() {
+export default async function ProgressBoardPage() {
   let habits = [];
   try {
     const userId = 'demo-user';
@@ -28,7 +28,7 @@ export default async function DashboardPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-4 sm:p-8">
         <header className="mb-6">
-          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+          <h1 className="text-2xl font-bold text-white">Tablica Postępów</h1>
         </header>
         
         <Card variant="elevated" className="text-center py-12">
@@ -50,7 +50,7 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-4 sm:p-8 max-w-4xl">
       <header className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-white">Tablica Postępów</h1>
       </header>
       
       <div className="space-y-6">

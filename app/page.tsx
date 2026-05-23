@@ -43,11 +43,11 @@ export default function Home() {
             </p>
           </Card>
 
-          <Link href="/dashboard" className="block">
-            <Button className="w-full" size="lg">
-              Zobacz swój postęp →
-            </Button>
-          </Link>
+<Link href="/dashboard" className="block">
+          <Button className="w-full" size="lg">
+            Zobacz swoją Tablicę Postępów →
+          </Button>
+        </Link>
         </div>
       </main>
     </div>
