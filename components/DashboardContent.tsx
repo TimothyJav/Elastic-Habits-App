@@ -9,6 +9,7 @@ import HabitList from '@/components/HabitList';
 import WeeklySummary from '@/components/WeeklySummary';
 import HabitChart from '@/components/HabitChart';
 import StreakCalendar from '@/components/StreakCalendar';
+import AddHabitForm from '@/components/AddHabitForm';
 
 interface DashboardContentProps {
   habitsPromise: ReturnType<typeof import('@/lib/habitActions').getHabits>;
@@ -23,28 +24,26 @@ export function DashboardContent({ habitsPromise }: DashboardContentProps) {
     })) || []
   ) || [];
 
-  if (habits?.length === 0) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-4 sm:p-8">
-        <header className="mb-6">
-          <h1 className="text-2xl font-bold text-white">Tablica Postępów</h1>
-        </header>
+if (habits?.length === 0) {
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-4 sm:p-8">
+            <header className="mb-6">
+              <h1 className="text-2xl font-bold text-white">Tablica Postępów</h1>
+            </header>
 
-        <Card variant="elevated" className="text-center py-12">
-          <div className="text-6xl mb-4">🎯</div>
-          <h2 className="text-xl font-semibold text-white mb-2">Brak nawyków</h2>
-          <p className="text-slate-400 mb-6">Dodaj swój pierwszy nawyk, aby zobaczyć postępy!</p>
-          <Link href="/">
-            <Button>Dodaj nawyk</Button>
-          </Link>
-        </Card>
+            <Card variant="elevated" className="text-center py-12">
+              <div className="text-6xl mb-4">🎯</div>
+              <h2 className="text-xl font-semibold text-white mb-2">Brak nawyków</h2>
+              <p className="text-slate-400 mb-6">Dodaj swój pierwszy nawyk, aby zobaczyć postępy!</p>
+              <AddHabitForm userId="demo-user" />
+            </Card>
 
-        <Link href="/" className="mt-6 inline-block text-primary-400 hover:underline">
-          ← Powrót do nawyków
-        </Link>
-      </div>
-    );
-  }
+            <Link href="/" className="mt-6 inline-block text-primary-400 hover:underline">
+              ← Powrót do nawyków
+            </Link>
+          </div>
+        );
+      }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-4 sm:p-8 max-w-4xl">
