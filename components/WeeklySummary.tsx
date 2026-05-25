@@ -24,7 +24,7 @@ export default function WeeklySummary({ logs }: WeeklySummaryProps) {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-medium text-slate-700">Podsumowanie tygodnia</h3>
+      <h3 className="text-sm font-medium text-slate-300">Podsumowanie tygodnia</h3>
       <div className="grid grid-cols-3 gap-2 text-center">
         <div className="p-3 bg-purple-900/20 border border-purple-500/20 rounded">
           <div className="text-2xl font-bold text-purple-400">{summary.full}</div>
@@ -39,7 +39,7 @@ export default function WeeklySummary({ logs }: WeeklySummaryProps) {
           <div className="text-[10px] uppercase font-bold text-green-300">Awaryjny</div>
         </div>
       </div>
-      <div className="text-center text-sm text-slate-600">
+      <div className="text-center text-sm text-slate-400">
         Łącznie: {summary.total} dni
       </div>
     </div>

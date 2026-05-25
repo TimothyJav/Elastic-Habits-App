@@ -39,7 +39,7 @@ export default function HabitList({ habits, userId }: { habits: Habit[], userId:
     <div className="flex flex-col gap-6">
       {habits.map((habit) => (
         <div key={habit.id} className="space-y-2">
-          <h3 className="text-lg font-bold text-slate-800 ml-1">{habit.title}</h3>
+          <h3 className="text-lg font-bold text-slate-200 ml-1">{habit.title}</h3>
           <EmergencySwitch 
             currentLevel={currentLevels[habit.id] || 'full'}
             goals={{ full: habit.full_goal, adjusted: habit.adjusted_goal, emergency: habit.emergency_goal }}

@@ -7,3 +7,4 @@
 - [x] PLAN_dashboard_visualization.md
 - [x] PLAN_ai_scaling_integration.md
 - [x] PLAN_ui_modernization.md
+- [x] PLAN_habit_level_edit.md

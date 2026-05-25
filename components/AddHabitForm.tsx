@@ -16,7 +16,6 @@ export default function AddHabitForm({ userId }: { userId: string }) {
     if (!title) return;
     setIsLoading(true);
     try {
-      // User's input is treated as FULL level, generate ADJUSTED and EMERGENCY
       const { adjusted, emergency } = await generateAdjustedAndEmergencyLevels(title);
       setLevels({
         full: title,
@@ -41,6 +40,11 @@ export default function AddHabitForm({ userId }: { userId: string }) {
     }
   };
 
+  const handleLevelChange = (level: 'full' | 'adjusted' | 'emergency', value: string) => {
+    if (!levels) return;
+    setLevels({ ...levels, [level]: value });
+  };
+
   const handleSave = async () => {
     if (!levels || !title) return;
     setIsSaving(true);
@@ -53,16 +57,14 @@ export default function AddHabitForm({ userId }: { userId: string }) {
         emergencyGoal: levels.emergency,
       });
 
-      // Wystrzał konfetti dla nagrody dopaminowej (ADHD-friendly UX)
       confetti({
         particleCount: 150,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#4f46e5', '#10b981', '#f59e0b'], // Indigo, Green, Amber
+        colors: ['#4f46e5', '#10b981', '#f59e0b'],
         zIndex: 999
       });
 
-      // Reset formularza po sukcesie
       setTitle('');
       setLevels(null);
       toast.success("Nawyk dodany pomyślnie!");
@@ -74,16 +76,16 @@ export default function AddHabitForm({ userId }: { userId: string }) {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 rounded-xl shadow-md border border-gray-600">
+    <div className="max-w-md mx-auto p-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 rounded-xl shadow-md border border-slate-700">
       <h2 className="text-xl font-bold mb-4 text-white">Nowy Elastyczny Nawyk</h2>
       
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Co chcesz robić? (Poziom FULL)</label>
+          <label className="block text-sm font-medium text-slate-300 mb-1">Co chcesz robić? (Poziom FULL)</label>
           <input
             type="text"
             placeholder="np. Medytacja, Bieganie, Kodowanie..."
-            className="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white outline-none"
+            className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-slate-800 text-white outline-none"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -92,7 +94,7 @@ export default function AddHabitForm({ userId }: { userId: string }) {
         <button
           onClick={handleGenerateAI}
           disabled={isLoading || !title}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50"
+          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50"
         >
           {isLoading ? '🤖 Generowanie...' : '✨ Wygeneruj poziomy z AI'}
         </button>
@@ -101,43 +103,57 @@ export default function AddHabitForm({ userId }: { userId: string }) {
           <div className="mt-6 space-y-3 animate-in fade-in slide-in-from-top-4 duration-500">
             <div className="p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
               <span className="text-xs font-bold text-green-400 uppercase">Poziom FULL</span>
-              <p className="text-gray-100">{levels.full}</p>
-            </div>
-            
-            <div className="p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
-              <span className="text-xs font-bold text-blue-400 uppercase">Poziom ADJUSTED</span>
-              <p className="text-gray-100">{levels.adjusted}</p>
-            </div>
+<input
+                 type="text"
+                 className="w-full mt-1 px-2 py-1 text-sm bg-slate-800/50 border border-slate-600 rounded text-slate-100 outline-none focus:ring-1 focus:ring-primary-500"
+                 value={levels.full}
+                 onChange={(e) => handleLevelChange('full', e.target.value)}
+               />
+             </div>
+             
+             <div className="p-3 bg-secondary-900/20 border border-secondary-600/30 rounded-lg">
+               <span className="text-xs font-bold text-secondary-400 uppercase">Poziom ADJUSTED</span>
+               <input
+                 type="text"
+                 className="w-full mt-1 px-2 py-1 text-sm bg-slate-800/50 border border-slate-600 rounded text-slate-100 outline-none focus:ring-1 focus:ring-secondary-500"
+                 value={levels.adjusted}
+                 onChange={(e) => handleLevelChange('adjusted', e.target.value)}
+               />
+             </div>
 
-            <div className="p-3 bg-orange-900/20 border border-orange-600/30 rounded-lg border-dashed">
-              <span className="text-xs font-bold text-orange-400 uppercase">🚨 Poziom EMERGENCY</span>
-              <p className="text-gray-100 font-medium">{levels.emergency}</p>
-              <p className="text-[10px] text-orange-300 mt-1 italic">Dla dni z najniższą energią.</p>
-            </div>
+             <div className="p-3 bg-emergency-900/20 border border-emergency-600/30 rounded-lg border-dashed">
+               <span className="text-xs font-bold text-emergency-400 uppercase">🚨 Poziom EMERGENCY</span>
+               <input
+                 type="text"
+                 className="w-full mt-1 px-2 py-1 text-sm bg-slate-800/50 border border-slate-600 rounded text-slate-100 outline-none focus:ring-1 focus:ring-emergency-500 font-medium"
+                 value={levels.emergency}
+                 onChange={(e) => handleLevelChange('emergency', e.target.value)}
+               />
+               <p className="text-[10px] text-emergency-300 mt-1 italic">Dla dni z najniższą energią.</p>
+             </div>
 
-            <div className="pt-4 flex gap-2">
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-4 rounded-xl transition"
-              >
-                {isSaving ? 'Zapisywanie...' : 'Zatwierdź i zacznij'}
-              </button>
-              <button
-                onClick={() => setLevels(null)}
-                className="px-4 py-2 text-sm text-gray-400 hover:text-gray-200"
-              >
-                Edytuj
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+<div className="pt-4 flex gap-2">
+               <button
+                 onClick={handleSave}
+                 disabled={isSaving}
+                 className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl transition"
+               >
+                 {isSaving ? 'Zapisywanie...' : 'Zatwierdź i zacznij'}
+               </button>
+               <button
+                 onClick={() => setLevels(null)}
+                 className="px-4 py-2 text-sm text-slate-400 hover:text-slate-200"
+               >
+                 Anuluj
+               </button>
+             </div>
+           </div>
+         )}
+       </div>
+     </div>
+   );
+ }
 
-// Helper function to generate adjusted and emergency levels based on full level
 async function generateAdjustedAndEmergencyLevels(fullLevel: string): Promise<{ adjusted: string; emergency: string }> {
   const openaiModule = await import('openai');
   const openai = new openaiModule.OpenAI({
