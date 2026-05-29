@@ -18,11 +18,11 @@ export default function HabitChart({ logs }: HabitChartProps) {
       <div className="flex items-end gap-4 h-32">
         {['full', 'adjusted', 'emergency'].map(level => {
           const height = (counts[level as keyof typeof counts] / maxCount) * 100;
-          const colors = {
-            full: 'bg-green-500',
-            adjusted: 'bg-yellow-500',
-            emergency: 'bg-green-700',
-          };
+          const colors: Record<string, string> = {
+          full: 'bg-purple-600',
+          adjusted: 'bg-secondary-600',
+          emergency: 'bg-emergency-600',
+        };
           return (
             <div key={level} className="flex-1 flex flex-col items-center">
               <div className="w-full flex items-end justify-center h-28">
@@ -31,8 +31,8 @@ export default function HabitChart({ logs }: HabitChartProps) {
                   style={{ height: `${height}%` }}
                 />
               </div>
-              <span className="text-xs mt-2 text-slate-600">{counts[level as keyof typeof counts]}</span>
-              <span className="text-xs font-medium">{level}</span>
+              <span className="text-xs mt-2 text-slate-400">{counts[level as keyof typeof counts]}</span>
+              <span className="text-xs font-medium text-slate-300 capitalize">{level}</span>
             </div>
           );
         })}

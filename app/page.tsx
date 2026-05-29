@@ -1,53 +1,36 @@
-'use client';
-
-import React, { useState } from 'react';
-import { EmergencySwitch } from '../EmergencySwitch';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 
 export default function Home() {
-  const [level, setLevel] = useState<'full' | 'adjusted' | 'emergency'>('full');
-  
-  const goals = {
-    full: "Biegać 30 minut",
-    adjusted: "Spacer 15 minut",
-    emergency: "Ubrać buty do biegania i wyjść przed dom"
-  };
-
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen p-4">
-      <div className="w-full max-w-2xl space-y-6">
-        <header className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-secondary-400">
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 px-4 py-10">
+      <section className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-md flex-col items-center justify-center gap-8 text-center">
+        <div className="space-y-3">
+          <h1 className="text-4xl font-bold text-white sm:text-5xl">
             Elastic Habits
           </h1>
-          <p className="text-slate-400">Twój ADHD-friendly tracker nawyków</p>
-        </header>
-
-        <Card variant="elevated">
-          <h2 className="text-xl font-semibold text-white mb-4">Dziś wybierz swój poziom</h2>
-          <EmergencySwitch 
-            currentLevel={level} 
-            onLevelChange={setLevel} 
-            goals={goals} 
-          />
-        </Card>
-
-        <Card>
-          <h3 className="text-lg font-medium text-white mb-3">Jak to działa?</h3>
-          <p className="text-slate-300 text-sm">
-            <strong className="text-emergency-400">Emergency Mode</strong> - w gorsze dni zrobisz minimum, 
-            a streak nadal rośnie. Zero wstydu, zero kar.
+          <p className="text-sm text-slate-400 sm:text-base">
+            Nawyki bez wstydu, w tempie dopasowanym do Twojej energii.
           </p>
-        </Card>
+        </div>
 
-        <Link href="/dashboard" className="block">
-          <Button className="w-full" size="lg">
-            Zobacz swój postęp →
-          </Button>
-        </Link>
-      </div>
+        <div className="flex w-full flex-col gap-3">
+          <Link href="/dashboard#dodaj-nawyk" className="block">
+            <Button className="w-full py-5 text-base font-bold sm:text-lg">
+              Dodaj nowy nawyk
+            </Button>
+          </Link>
+
+          <Link href="/dashboard#twoje-nawyki" className="block">
+            <Button
+              variant="outline"
+              className="w-full py-5 text-base font-bold sm:text-lg"
+            >
+              Twoje nawyki
+            </Button>
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

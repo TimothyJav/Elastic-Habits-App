@@ -51,3 +51,7 @@
 ## Modernizacja UI (PLAN_ui_modernization.md)
 - **Status:** Wykonane
 - **Opis:** Nowoczesny design system z ADHD-friendly kolorkami, komponenty Button/Card/Skeleton, bottom navigation dla mobile.
+
+## Edycja poziomów nawyków (PLAN_habit_level_edit.md)
+- **Status:** Wykonane
+- **Opis:** Użytkownik może ręcznie edytować wygenerowane przez AI poziomy FULL, ADJUSTED i EMERGENCY przed zapisaniem nawyku.

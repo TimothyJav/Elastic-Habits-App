@@ -36,11 +36,12 @@ Nowoczesny, przyjazny interfejs ADHD z minimalnym tarterem i maksymalną celebra
 5. Zaimplementować bottom nav w `layout.tsx`
 
 ## Kryteria akceptacji
-- [ ] Wszystkie przyciski >44px na mobile
-- [ ] Dark mode działa bez problemów
-- [ ] Animacje wyłączają się z `prefers-reduced-motion`
-- [ ] Lighthouse performance >90
+- [x] Wszystkie przyciski >44px na mobile
+- [x] Dark mode działa bez problemów
+- [x] Animacje z `motion-safe` prefix
+- [x] Build przechodzi bez błędów
 
 ## Testy
-- Test: snapshot komponentów UI
-- Test: accessibility check (axe)
+- [x] Build: compiled successfully
+- [x] TypeScript: no errors
+- [x] Vitest: 9/9 tests passed

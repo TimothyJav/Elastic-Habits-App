@@ -19,16 +19,16 @@ export default function StreakCalendar({ logs }: StreakCalendarProps) {
     const dateStr = date.toISOString().split('T')[0];
     const level = dates[dateStr];
     
-    const bgColors = {
-      full: 'bg-green-500',
-      adjusted: 'bg-yellow-500',
-      emergency: 'bg-green-700',
+    const bgColors: Record<string, string> = {
+      full: 'bg-purple-600',
+      adjusted: 'bg-secondary-600',
+      emergency: 'bg-emergency-600',
     };
 
     days.push(
       <div
         key={i}
-        className={`w-8 h-8 rounded ${level ? bgColors[level as keyof typeof bgColors] : 'bg-slate-200'}`}
+        className={`w-8 h-8 rounded ${level ? bgColors[level] : 'bg-slate-700'}`}
         title={dateStr}
       />
     );
@@ -36,7 +36,7 @@ export default function StreakCalendar({ logs }: StreakCalendarProps) {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-medium text-slate-700">Ostatnie 28 dni</h3>
+      <h3 className="text-sm font-medium text-slate-300">Ostatnie 28 dni</h3>
       <div className="grid grid-cols-7 gap-2">
         {days}
       </div>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Elastic Habits",
@@ -9,8 +8,8 @@ export const metadata: Metadata = {
 };
 
 const navItems = [
-  { href: "/", label: "Home", icon: "🏠" },
-  { href: "/dashboard", label: "Dashboard", icon: "📊" },
+  { href: "/", label: "Start", icon: "🏠" },
+  { href: "/dashboard", label: "Tablica", icon: "📊" },
 ];
 
 export default function RootLayout({
@@ -19,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pl">
-      <body className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900 text-slate-100">
+    <html lang="pl" className="dark">
+      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased">
         <div className="max-w-4xl mx-auto p-4 pb-20">{children}</div>
         
         <nav className="fixed bottom-0 left-0 right-0 bg-slate-900/80 backdrop-blur border-t border-slate-800">

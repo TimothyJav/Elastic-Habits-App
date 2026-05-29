@@ -1,37 +1,37 @@
-# Tech Stack Decision
+# Decyzja Stosu Technologicznego
 
-## Stack Architecture (2024)
+## Architektura Stosu (2024)
 
-### Frontend Layer
+### Warstwa Frontend
 - **Framework:** Next.js 14 (App Router)
-- **Styling:** TailwindCSS + CSS Variables dla motywów
-- **UI Pattern:** Server Components + Client Components ("use client")
-- **Icons:** Lucide React
+- **Stylizacja:** TailwindCSS + CSS Variables dla motywów
+- **Wzorzec UI:** Server Components + Client Components ("use client")
+- **Ikony:** Lucide React
 
-### Backend Layer  
-- **Database:** Supabase PostgreSQL
-- **Auth:** Supabase Auth (JWT-based)
-- **Security:** Row Level Security (RLS) - polityki na poziomie tabel
-- **Realtime:** WebSocket subscriptions dla live updates
+### Warstwa Backend  
+- **Baza danych:** Supabase PostgreSQL
+- **Autoryzacja:** Supabase Auth (JWT-based)
+- **Bezpieczeństwo:** Row Level Security (RLS) - polityki na poziomie tabel
+- **Realtime:** WebSocket subscriptions dla live aktualizacji
 
-### Infrastructure
+### Infrastruktura
 - **Deployment:** Vercel (Edge Functions)
 - **PWA:** manifest.json + next-pwa plugin
-- **Domain:** Vercel subdomena (.vercel.app)
+- **Domena:** Subdomena Vercel (.vercel.app)
 
-## Code Conventions
+## Konwencje Kodu
 
 ### TypeScript
-- Strict mode enabled
-- Zod dla walidacji danych
-- Generated types z Supabase CLI
+- Tryb strict włączony
+- Zod do walidacji danych
+- Wygenerowane typy z Supabase CLI
 
-### Styling
+### Stylizacja
 - Mobile-first breakpointy
 - Utility-first CSS (Tailwind)
-- Brak customowych CSS-in-JS
+- Brak CSS-in-JS
 
-### File Naming
+### Nazewnictwo Plików
 - PascalCase: komponenty (`HabitList.tsx`)
 - camelCase: hooks, utils (`useAuth.ts`, `streakUtils.ts`)
 - SCREAMING_SNAKE: stałe (`EMERGENCY_TEMPLATES`)
