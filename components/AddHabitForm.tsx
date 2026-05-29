@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import { createHabit } from '@/lib/habitActions';
 import { useAISuggestions } from '@/lib/ai-scaling';
 
 export default function AddHabitForm({ userId }: { userId: string }) {
+  const router = useRouter();
   const [title, setTitle] = useState('');
   const [levels, setLevels] = useState<{ full: string; adjusted: string; emergency: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +25,7 @@ export default function AddHabitForm({ userId }: { userId: string }) {
         emergency
       });
     } catch (error) {
+      console.error('handleSave error:', error);
       const { suggestHabitLevels } = useAISuggestions();
       const suggestion = suggestHabitLevels(title);
       if (suggestion) {
@@ -67,6 +70,7 @@ export default function AddHabitForm({ userId }: { userId: string }) {
 
       setTitle('');
       setLevels(null);
+      router.refresh();
       toast.success("Nawyk dodany pomyślnie!");
     } catch (error) {
       toast.error("Błąd podczas zapisywania nawyku.");

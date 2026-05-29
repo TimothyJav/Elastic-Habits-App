@@ -10,6 +10,7 @@ import WeeklySummary from '@/components/WeeklySummary';
 import HabitChart from '@/components/HabitChart';
 import StreakCalendar from '@/components/StreakCalendar';
 import AddHabitForm from '@/components/AddHabitForm';
+import { DEMO_USER_ID } from '@/lib/demoUser';
 
 interface DashboardContentProps {
   habitsPromise: ReturnType<typeof import('@/lib/habitActions').getHabits>;
@@ -35,7 +36,7 @@ if (habits?.length === 0) {
               <div className="text-6xl mb-4">🎯</div>
               <h2 className="text-xl font-semibold text-white mb-2">Brak nawyków</h2>
               <p className="text-slate-400 mb-6">Dodaj swój pierwszy nawyk, aby zobaczyć postępy!</p>
-              <AddHabitForm userId="demo-user" />
+              <AddHabitForm userId={DEMO_USER_ID} />
             </Card>
 
             <Link href="/" className="mt-6 inline-block text-primary-400 hover:underline">
@@ -54,12 +55,12 @@ if (habits?.length === 0) {
       <div className="space-y-6">
         <section id="dodaj-nawyk">
           <h2 className="text-lg font-semibold text-white mb-3">Dodaj nowy nawyk</h2>
-          <AddHabitForm userId="demo-user" />
+          <AddHabitForm userId={DEMO_USER_ID} />
         </section>
 
         <section id="twoje-nawyki" className="border-t border-slate-800 pt-6">
           <h2 className="text-lg font-semibold text-white mb-3">Twoje nawyki</h2>
-          <HabitList habits={habits} userId="demo-user" />
+          <HabitList habits={habits} userId={DEMO_USER_ID} />
         </section>
 
         <section className="border-t border-slate-800 pt-6">

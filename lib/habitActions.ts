@@ -43,14 +43,17 @@ export async function createHabit(formData: {
       {
         user_id: formData.userId,
         title: formData.title,
-        full_goal: formData.fullGoal,
-        adjusted_goal: formData.adjustedGoal,
-        emergency_goal: formData.emergencyGoal,
+        level_full: formData.fullGoal,
+        level_adjusted: formData.adjustedGoal,
+        level_emergency: formData.emergencyGoal,
       },
     ])
     .select();
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error('createHabit error:', error);
+    throw new Error(error.message);
+  }
   revalidatePath('/dashboard');
   return data;
 }

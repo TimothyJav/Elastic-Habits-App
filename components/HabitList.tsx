@@ -8,9 +8,9 @@ import { toast } from 'sonner';
 interface Habit {
   id: string;
   title: string;
-  full_goal: string;
-  adjusted_goal: string;
-  emergency_goal: string;
+  level_full: string;
+  level_adjusted: string;
+  level_emergency: string;
   user_id: string;
 }
 
@@ -42,7 +42,7 @@ export default function HabitList({ habits, userId }: { habits: Habit[], userId:
           <h3 className="text-lg font-bold text-slate-200 ml-1">{habit.title}</h3>
           <EmergencySwitch 
             currentLevel={currentLevels[habit.id] || 'full'}
-            goals={{ full: habit.full_goal, adjusted: habit.adjusted_goal, emergency: habit.emergency_goal }}
+            goals={{ full: habit.level_full, adjusted: habit.level_adjusted, emergency: habit.level_emergency }}
             onLevelChange={(level) => handleLevelChange(habit.id, level)}
           />
         </div>

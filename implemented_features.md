@@ -55,3 +55,8 @@
 ## Edycja poziomów nawyków (PLAN_habit_level_edit.md)
 - **Status:** Wykonane
 - **Opis:** Użytkownik może ręcznie edytować wygenerowane przez AI poziomy FULL, ADJUSTED i EMERGENCY przed zapisaniem nawyku.
+
+## Zapis nawyków w trybie demo
+- **Status:** Wykonane
+- **Plan:** `PLAN_database_schema.md`
+- **Opis:** Formularz dodawania nawyku zapisuje dane do Supabase, odświeża dashboard po sukcesie i pokazuje komunikat systemowy.
