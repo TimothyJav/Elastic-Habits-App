@@ -31,7 +31,7 @@ if (habits?.length === 0) {
               <h1 className="text-2xl font-bold text-white">Tablica Postępów</h1>
             </header>
 
-            <Card variant="elevated" className="text-center py-12">
+            <Card id="dodaj-nawyk" variant="elevated" className="text-center py-12">
               <div className="text-6xl mb-4">🎯</div>
               <h2 className="text-xl font-semibold text-white mb-2">Brak nawyków</h2>
               <p className="text-slate-400 mb-6">Dodaj swój pierwszy nawyk, aby zobaczyć postępy!</p>
@@ -52,7 +52,12 @@ if (habits?.length === 0) {
       </header>
 
       <div className="space-y-6">
-        <section>
+        <section id="dodaj-nawyk">
+          <h2 className="text-lg font-semibold text-white mb-3">Dodaj nowy nawyk</h2>
+          <AddHabitForm userId="demo-user" />
+        </section>
+
+        <section id="twoje-nawyki" className="border-t border-slate-800 pt-6">
           <h2 className="text-lg font-semibold text-white mb-3">Twoje nawyki</h2>
           <HabitList habits={habits} userId="demo-user" />
         </section>
