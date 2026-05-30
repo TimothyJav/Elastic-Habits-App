@@ -1,6 +1,6 @@
 # Scenariusze Testów E2E (End-to-End)
 
-> **Uwaga:** Testy E2E nie są jeszcze implementowane w projekcie. Playwright wymieniony w `docs/roles/tester.md` nie jest zainstalowany w `package.json`. Poniższe scenariusze są zdefiniowane jako szablony do implementacji.
+> **Uwaga:** Testy E2E nie są jeszcze implementowane w projekcie. Playwright wymieniony w `docs/roles/tester/README.md` nie jest zainstalowany w `package.json`. Poniższe scenariusze są zdefiniowane jako szablony do implementacji.
 
 ## Priorytetyzacja (ICE)
 

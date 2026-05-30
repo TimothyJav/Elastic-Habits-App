@@ -1,6 +1,6 @@
 # Scenariusze Testów ADHD-Specyficznych
 
-> Te scenariusze są pochodną z `docs/roles/tester.md` i `docs/my workflows/other workflows/assignment_requirements.md`.
+> Te scenariusze są pochodną z `docs/roles/tester/README.md` i `docs/my workflows/other workflows/assignment_requirements.md`.
 > Każdy z nich testuje regułę biznesową specyficzną dla użytkowników ADHD.
 
 ---
