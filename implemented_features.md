@@ -60,3 +60,13 @@
 - **Status:** Wykonane
 - **Plan:** `PLAN_database_schema.md`
 - **Opis:** Formularz dodawania nawyku zapisuje dane do Supabase, odświeża dashboard po sukcesie i pokazuje komunikat systemowy.
+
+## Dzisiejszy panel fokusowy
+- **Status:** Wykonane
+- **Plan:** `PLAN_daily_focus_dashboard.md`
+- **Opis:** Dashboard pokazuje check-in energii, dzisiejszy plan, szybkie oznaczanie poziomów Full/Adjusted/Emergency, statystyki tygodnia oraz liczbę użyć Emergency jako pozytywnych momentów rescue.
+
+## Szablony dodawania nawyków
+- **Status:** Wykonane
+- **Plan:** `PLAN_daily_focus_dashboard.md`
+- **Opis:** Formularz dodawania nawyku zawiera gotowe szablony dla ruchu, sprzątania, nauki i snu oraz lokalne sugestie poziomów bez blokowania użytkownika na AI.
