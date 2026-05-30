@@ -9,3 +9,4 @@
 - [x] PLAN_ui_modernization.md
 - [x] PLAN_habit_level_edit.md
 - [x] PLAN_daily_focus_dashboard.md
+- [x] PLAN_reliable_habit_level_generation.md

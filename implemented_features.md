@@ -70,3 +70,8 @@
 - **Status:** Wykonane
 - **Plan:** `PLAN_daily_focus_dashboard.md`
 - **Opis:** Formularz dodawania nawyku zawiera gotowe szablony dla ruchu, sprzątania, nauki i snu oraz lokalne sugestie poziomów bez blokowania użytkownika na AI.
+
+## Stabilne generowanie poziomów nawyków
+- **Status:** Wykonane
+- **Plan:** `PLAN_reliable_habit_level_generation.md`
+- **Opis:** Sugestie poziomów są teraz deterministyczne: znane nawyki trafiają w stabilne kategorie, a nieznane cele dostają bezpieczny fallback oparty o treść użytkownika zamiast losowego szablonu.

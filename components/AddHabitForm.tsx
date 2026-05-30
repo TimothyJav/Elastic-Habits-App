@@ -14,6 +14,11 @@ type HabitLevels = {
   emergency: string;
 };
 
+type SuggestionMeta = {
+  category: string;
+  confidence: 'high' | 'medium' | 'fallback';
+};
+
 const quickTemplates: Array<{ title: string; levels: HabitLevels }> = [
   {
     title: 'Ruch',
@@ -53,12 +58,14 @@ export default function AddHabitForm({ userId }: { userId: string }) {
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [levels, setLevels] = useState<HabitLevels | null>(null);
+  const [suggestionMeta, setSuggestionMeta] = useState<SuggestionMeta | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const applyTemplate = (templateTitle: string, templateLevels: HabitLevels) => {
     setTitle(templateTitle);
     setLevels(templateLevels);
+    setSuggestionMeta({ category: templateTitle.toLowerCase(), confidence: 'high' });
     toast.info('Szablon gotowy do edycji.');
   };
 
@@ -73,7 +80,14 @@ export default function AddHabitForm({ userId }: { userId: string }) {
         adjusted: suggestion?.adjusted || `Mniejsza wersja: ${title}`,
         emergency: suggestion?.emergency || `Najmniejszy możliwy krok: ${title}`,
       });
-      toast.success('Poziomy przygotowane. Możesz je edytować.');
+      setSuggestionMeta(
+        suggestion ? { category: suggestion.category, confidence: suggestion.confidence } : null
+      );
+      toast.success(
+        suggestion?.confidence === 'fallback'
+          ? 'Przygotowałem bezpieczną wersję własną.'
+          : 'Poziomy dopasowane do kategorii. Możesz je edytować.'
+      );
     } finally {
       setIsGenerating(false);
     }
@@ -107,6 +121,7 @@ export default function AddHabitForm({ userId }: { userId: string }) {
 
       setTitle('');
       setLevels(null);
+      setSuggestionMeta(null);
       router.refresh();
       toast.success('Nawyk dodany. Masz od razu wersję Emergency.');
     } catch (error) {
@@ -174,6 +189,22 @@ export default function AddHabitForm({ userId }: { userId: string }) {
 
         {levels && (
           <div className="space-y-3">
+            {suggestionMeta && (
+              <div className="rounded-xl border border-slate-700 bg-slate-950/70 p-3 text-sm text-slate-300">
+                <span className="font-semibold text-white">
+                  {suggestionMeta.confidence === 'fallback'
+                    ? 'Tryb ostrożny'
+                    : 'Dopasowany szablon'}
+                </span>
+                <span className="text-slate-400"> · {suggestionMeta.category}</span>
+                <p className="mt-1 text-xs text-slate-400">
+                  {suggestionMeta.confidence === 'fallback'
+                    ? 'Nie znalazłem pewnej kategorii, więc zachowałem Twój cel i zaproponowałem neutralne mniejsze kroki.'
+                    : 'Sugestia pochodzi ze stabilnej kategorii zamiast losowego przykładu.'}
+                </p>
+              </div>
+            )}
+
             <LevelEditor
               label="Full"
               tone="violet"
@@ -205,7 +236,10 @@ export default function AddHabitForm({ userId }: { userId: string }) {
               </button>
               <button
                 type="button"
-                onClick={() => setLevels(null)}
+                onClick={() => {
+                  setLevels(null);
+                  setSuggestionMeta(null);
+                }}
                 className="min-h-12 rounded-xl border border-slate-700 px-4 py-3 font-semibold text-slate-300 transition hover:bg-slate-800"
               >
                 Wyczyść poziomy
