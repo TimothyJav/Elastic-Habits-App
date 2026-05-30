@@ -21,7 +21,7 @@ export default function HabitChart({ logs }: HabitChartProps) {
           const colors: Record<string, string> = {
           full: 'bg-purple-600',
           adjusted: 'bg-secondary-600',
-          emergency: 'bg-emergency-600',
+          emergency: 'bg-green-600',
         };
           return (
             <div key={level} className="flex-1 flex flex-col items-center">

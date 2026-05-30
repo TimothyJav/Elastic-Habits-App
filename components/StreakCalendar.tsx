@@ -22,7 +22,7 @@ export default function StreakCalendar({ logs }: StreakCalendarProps) {
     const bgColors: Record<string, string> = {
       full: 'bg-purple-600',
       adjusted: 'bg-secondary-600',
-      emergency: 'bg-emergency-600',
+      emergency: 'bg-green-600',
     };
 
     days.push(
