@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, Clock3, Flame, FileText, ShieldCheck, X } from 'lucide-react';
-import { createHabitNote, deleteHabit, logHabitCompletion } from '@/lib/habitActions';
+import { createHabitNote, deleteHabit, deleteHabitNote, logHabitCompletion } from '@/lib/habitActions';
 import { toast } from 'sonner';
 
 type CompletionLevel = 'full' | 'adjusted' | 'emergency';
@@ -15,6 +15,7 @@ interface HabitLog {
 
 interface HabitNote {
   id: string;
+  habit_id: string;
   content: string;
   created_at: string;
 }
@@ -69,6 +70,8 @@ export default function HabitList({
   const [habitForNote, setHabitForNote] = useState<Habit | null>(null);
   const [noteContent, setNoteContent] = useState('');
   const [savingNoteHabitId, setSavingNoteHabitId] = useState<string | null>(null);
+  const [noteToDelete, setNoteToDelete] = useState<HabitNote | null>(null);
+  const [deletingNoteId, setDeletingNoteId] = useState<string | null>(null);
 
   const today = todayKey();
 
@@ -127,6 +130,22 @@ export default function HabitList({
     }
   };
 
+  const handleDeleteNote = async () => {
+    if (!noteToDelete) return;
+
+    try {
+      setDeletingNoteId(noteToDelete.id);
+      await deleteHabitNote(noteToDelete.id, noteToDelete.habit_id, userId);
+      toast.success('Notatka usunięta.');
+      setNoteToDelete(null);
+      router.refresh();
+    } catch (error) {
+      toast.error('Nie udało się usunąć notatki.');
+    } finally {
+      setDeletingNoteId(null);
+    }
+  };
+
   if (habits.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-slate-700 p-10 text-center text-slate-400">
@@ -153,6 +172,7 @@ export default function HabitList({
               setHabitForNote(habit);
               setNoteContent('');
             }}
+            onDeleteNote={note => setNoteToDelete(note)}
           />
         ))}
       </div>
@@ -179,6 +199,15 @@ export default function HabitList({
           onConfirm={handleSaveNote}
         />
       )}
+
+      {noteToDelete && (
+        <DeleteNoteDialog
+          noteContent={noteToDelete.content}
+          isDeleting={deletingNoteId === noteToDelete.id}
+          onCancel={() => setNoteToDelete(null)}
+          onConfirm={handleDeleteNote}
+        />
+      )}
     </>
   );
 }
@@ -193,6 +222,7 @@ function HabitCard({
   onLevelChange,
   onDelete,
   onAddNote,
+  onDeleteNote,
 }: {
   habit: Habit;
   today: string;
@@ -203,6 +233,7 @@ function HabitCard({
   onLevelChange: (level: CompletionLevel) => void;
   onDelete: () => void;
   onAddNote: () => void;
+  onDeleteNote: (note: HabitNote) => void;
 }) {
   const todayLog = habit.habit_logs?.find(log => log.completed_at === today);
   const visibleLevel = selectedLevel || todayLog?.level_achieved;
@@ -284,7 +315,7 @@ function HabitCard({
       </div>
 
       <HabitHistory logs={habit.habit_logs || []} onAddNote={onAddNote} />
-      <HabitNotes notes={habit.habit_notes || []} />
+      <HabitNotes notes={habit.habit_notes || []} onDeleteNote={onDeleteNote} />
 
       <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-slate-400">
         <div className="rounded-lg bg-slate-950/70 p-2">
@@ -343,6 +374,54 @@ function DeleteHabitDialog({
             className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Zostaw nawyk
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isDeleting}
+            className="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isDeleting ? 'Usuwanie...' : 'Usuń'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DeleteNoteDialog({
+  noteContent,
+  isDeleting,
+  onCancel,
+  onConfirm,
+}: {
+  noteContent: string;
+  isDeleting: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-sm">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-note-title"
+        className="w-full max-w-sm rounded-2xl border border-slate-700 bg-slate-900 p-5 shadow-2xl"
+      >
+        <h2 id="delete-note-title" className="text-lg font-bold text-white">
+          Usunąć notatkę?
+        </h2>
+        <p className="mt-2 text-sm text-slate-300">
+          „{noteContent}” zniknie trwale.
+        </p>
+        <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isDeleting}
+            className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Zostaw
           </button>
           <button
             type="button"
@@ -471,7 +550,7 @@ function HabitHistory({ logs, onAddNote }: { logs: HabitLog[]; onAddNote: () => 
   );
 }
 
-function HabitNotes({ notes }: { notes: HabitNote[] }) {
+function HabitNotes({ notes, onDeleteNote }: { notes: HabitNote[]; onDeleteNote: (note: HabitNote) => void }) {
   const latestNotes = useMemo(
     () =>
       [...notes]
@@ -492,7 +571,18 @@ function HabitNotes({ notes }: { notes: HabitNote[] }) {
       <div className="space-y-2">
         {latestNotes.map(note => (
           <div key={note.id} className="rounded-lg border border-slate-800 bg-slate-950/70 p-3">
-            <p className="text-sm leading-relaxed text-slate-200">{note.content}</p>
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-sm leading-relaxed text-slate-200">{note.content}</p>
+              <button
+                type="button"
+                onClick={() => onDeleteNote(note)}
+                aria-label={`Usuń notatkę z ${new Date(note.created_at).toLocaleDateString('pl-PL')}`}
+                title="Usuń notatkę"
+                className="rounded-lg border border-slate-700 bg-slate-950/70 p-1.5 text-slate-400 transition hover:border-rose-400/60 hover:text-rose-200"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
             <p className="mt-2 text-xs text-slate-500">
               {new Date(note.created_at).toLocaleDateString('pl-PL')}
             </p>

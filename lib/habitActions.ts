@@ -105,6 +105,22 @@ export async function createHabitNote(formData: {
   return data;
 }
 
+export async function deleteHabitNote(noteId: string, habitId: string, userId: string) {
+  const { error } = await supabase
+    .from('habit_notes')
+    .delete()
+    .eq('id', noteId)
+    .eq('habit_id', habitId)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('deleteHabitNote error:', error);
+    throw new Error(error.message);
+  }
+
+  revalidatePath('/dashboard');
+}
+
 export async function getHabits(userId: string) {
   const { data, error } = await supabase
     .from('habits')
