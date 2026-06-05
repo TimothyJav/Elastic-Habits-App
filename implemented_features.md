@@ -80,3 +80,8 @@
 - **Status:** Wykonane
 - **Plan:** `PLAN_habit_delete_and_per_habit_history.md`
 - **Opis:** Karta nawyku ma przycisk usuwania z własnym dialogiem potwierdzenia oraz mini historię ostatnich 28 dni dotyczącą wyłącznie tego konkretnego nawyku. Zdublowany globalny kalendarz i osobny rozkład poziomów zostały usunięte z dołu dashboardu.
+
+## Notatki postępu przy nawykach
+- **Status:** Wykonane
+- **Plan:** `PLAN_habit_progress_notes.md`
+- **Opis:** Pod historią każdego nawyku znajduje się przycisk „Dodaj notatkę”. Użytkownik może zapisać krótką refleksję o trudnościach, regularności lub przemyśleniach, a ostatnie notatki są widoczne na karcie właściwego nawyku.

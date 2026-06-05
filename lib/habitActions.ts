@@ -73,6 +73,37 @@ export async function deleteHabit(habitId: string, userId: string) {
   revalidatePath('/dashboard');
 }
 
+export async function createHabitNote(formData: {
+  habitId: string;
+  userId: string;
+  content: string;
+}) {
+  const content = formData.content.trim();
+
+  if (!content) {
+    throw new Error('Notatka nie może być pusta.');
+  }
+
+  const { data, error } = await supabase
+    .from('habit_notes')
+    .insert([
+      {
+        habit_id: formData.habitId,
+        user_id: formData.userId,
+        content,
+      },
+    ])
+    .select();
+
+  if (error) {
+    console.error('createHabitNote error:', error);
+    throw new Error(error.message);
+  }
+
+  revalidatePath('/dashboard');
+  return data;
+}
+
 export async function getHabits(userId: string) {
   const { data, error } = await supabase
     .from('habits')
@@ -86,5 +117,27 @@ export async function getHabits(userId: string) {
     .eq('user_id', userId);
 
   if (error) throw new Error(error.message);
-  return data;
+
+  const habits = data || [];
+  const habitIds = habits.map(habit => habit.id);
+
+  if (habitIds.length === 0) {
+    return habits;
+  }
+
+  const { data: notes, error: notesError } = await supabase
+    .from('habit_notes')
+    .select('id, habit_id, content, created_at')
+    .eq('user_id', userId)
+    .in('habit_id', habitIds)
+    .order('created_at', { ascending: false });
+
+  if (notesError) {
+    return habits.map(habit => ({ ...habit, habit_notes: [] }));
+  }
+
+  return habits.map(habit => ({
+    ...habit,
+    habit_notes: (notes || []).filter(note => note.habit_id === habit.id),
+  }));
 }

@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2, Clock3, Flame, ShieldCheck, X } from 'lucide-react';
-import { deleteHabit, logHabitCompletion } from '@/lib/habitActions';
+import { CheckCircle2, Clock3, Flame, FileText, ShieldCheck, X } from 'lucide-react';
+import { createHabitNote, deleteHabit, logHabitCompletion } from '@/lib/habitActions';
 import { toast } from 'sonner';
 
 type CompletionLevel = 'full' | 'adjusted' | 'emergency';
@@ -11,6 +11,12 @@ type CompletionLevel = 'full' | 'adjusted' | 'emergency';
 interface HabitLog {
   level_achieved: CompletionLevel;
   completed_at: string;
+}
+
+interface HabitNote {
+  id: string;
+  content: string;
+  created_at: string;
 }
 
 interface Habit {
@@ -21,6 +27,7 @@ interface Habit {
   level_emergency: string;
   user_id: string;
   habit_logs?: HabitLog[];
+  habit_notes?: HabitNote[];
 }
 
 interface HabitListProps {
@@ -59,6 +66,9 @@ export default function HabitList({
   const [savingHabitId, setSavingHabitId] = useState<string | null>(null);
   const [deletingHabitId, setDeletingHabitId] = useState<string | null>(null);
   const [habitToDelete, setHabitToDelete] = useState<Habit | null>(null);
+  const [habitForNote, setHabitForNote] = useState<Habit | null>(null);
+  const [noteContent, setNoteContent] = useState('');
+  const [savingNoteHabitId, setSavingNoteHabitId] = useState<string | null>(null);
 
   const today = todayKey();
 
@@ -95,6 +105,27 @@ export default function HabitList({
     }
   };
 
+  const handleSaveNote = async () => {
+    if (!habitForNote || !noteContent.trim()) return;
+
+    try {
+      setSavingNoteHabitId(habitForNote.id);
+      await createHabitNote({
+        habitId: habitForNote.id,
+        userId,
+        content: noteContent,
+      });
+      setNoteContent('');
+      setHabitForNote(null);
+      toast.success('Notatka zapisana.');
+      router.refresh();
+    } catch (error) {
+      toast.error('Nie udało się zapisać notatki.');
+    } finally {
+      setSavingNoteHabitId(null);
+    }
+  };
+
   if (habits.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-slate-700 p-10 text-center text-slate-400">
@@ -117,6 +148,10 @@ export default function HabitList({
             isDeleting={deletingHabitId === habit.id}
             onLevelChange={level => handleLevelChange(habit.id, level)}
             onDelete={() => setHabitToDelete(habit)}
+            onAddNote={() => {
+              setHabitForNote(habit);
+              setNoteContent('');
+            }}
           />
         ))}
       </div>
@@ -127,6 +162,20 @@ export default function HabitList({
           isDeleting={deletingHabitId === habitToDelete.id}
           onCancel={() => setHabitToDelete(null)}
           onConfirm={handleDeleteHabit}
+        />
+      )}
+
+      {habitForNote && (
+        <HabitNoteDialog
+          habitTitle={habitForNote.title}
+          noteContent={noteContent}
+          isSaving={savingNoteHabitId === habitForNote.id}
+          onNoteChange={setNoteContent}
+          onCancel={() => {
+            setHabitForNote(null);
+            setNoteContent('');
+          }}
+          onConfirm={handleSaveNote}
         />
       )}
     </>
@@ -142,6 +191,7 @@ function HabitCard({
   isDeleting,
   onLevelChange,
   onDelete,
+  onAddNote,
 }: {
   habit: Habit;
   today: string;
@@ -151,6 +201,7 @@ function HabitCard({
   isDeleting: boolean;
   onLevelChange: (level: CompletionLevel) => void;
   onDelete: () => void;
+  onAddNote: () => void;
 }) {
   const todayLog = habit.habit_logs?.find(log => log.completed_at === today);
   const visibleLevel = selectedLevel || todayLog?.level_achieved;
@@ -231,7 +282,8 @@ function HabitCard({
         ))}
       </div>
 
-      <HabitHistory logs={habit.habit_logs || []} />
+      <HabitHistory logs={habit.habit_logs || []} onAddNote={onAddNote} />
+      <HabitNotes notes={habit.habit_notes || []} />
 
       <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-slate-400">
         <div className="rounded-lg bg-slate-950/70 p-2">
@@ -305,7 +357,66 @@ function DeleteHabitDialog({
   );
 }
 
-function HabitHistory({ logs }: { logs: HabitLog[] }) {
+function HabitNoteDialog({
+  habitTitle,
+  noteContent,
+  isSaving,
+  onNoteChange,
+  onCancel,
+  onConfirm,
+}: {
+  habitTitle: string;
+  noteContent: string;
+  isSaving: boolean;
+  onNoteChange: (value: string) => void;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-sm">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="habit-note-title"
+        className="w-full max-w-lg rounded-2xl border border-slate-700 bg-slate-900 p-5 shadow-2xl"
+      >
+        <h2 id="habit-note-title" className="text-lg font-bold text-white">
+          Dodaj notatkę
+        </h2>
+        <p className="mt-2 text-sm text-slate-300">
+          Zapisz refleksję o nawyku „{habitTitle}”. Może być krótko, roboczo i bez idealnych zdań.
+        </p>
+        <textarea
+          value={noteContent}
+          onChange={event => onNoteChange(event.target.value)}
+          rows={5}
+          placeholder="np. Dzisiaj było trudno zacząć, ale Emergency pomogło mi nie wypaść z rytmu."
+          className="mt-4 w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-green-400 focus:ring-2 focus:ring-green-500/20"
+        />
+        <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isSaving}
+            className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Anuluj
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isSaving || !noteContent.trim()}
+            className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-500 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isSaving ? 'Zapisuję...' : 'Zapisz notatkę'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HabitHistory({ logs, onAddNote }: { logs: HabitLog[]; onAddNote: () => void }) {
   const levelsByDate = useMemo(() => {
     const dates: Record<string, CompletionLevel> = {};
 
@@ -345,6 +456,46 @@ function HabitHistory({ logs }: { logs: HabitLog[] }) {
             title={`${day.dateKey}${day.level ? `: ${levelLabels[day.level]}` : ': brak wpisu'}`}
             className={`h-3 rounded-sm ${day.level ? historyColors[day.level] : 'bg-slate-700/70'}`}
           />
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={onAddNote}
+        className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-950/70 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-green-400/70 hover:text-green-100"
+      >
+        <FileText className="h-4 w-4" />
+        Dodaj notatkę
+      </button>
+    </div>
+  );
+}
+
+function HabitNotes({ notes }: { notes: HabitNote[] }) {
+  const latestNotes = useMemo(
+    () =>
+      [...notes]
+        .sort((a, b) => b.created_at.localeCompare(a.created_at))
+        .slice(0, 3),
+    [notes]
+  );
+
+  if (latestNotes.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="mt-3 space-y-2">
+      <div className="text-xs font-semibold uppercase text-slate-400">
+        Ostatnie notatki
+      </div>
+      <div className="space-y-2">
+        {latestNotes.map(note => (
+          <div key={note.id} className="rounded-lg border border-slate-800 bg-slate-950/70 p-3">
+            <p className="text-sm leading-relaxed text-slate-200">{note.content}</p>
+            <p className="mt-2 text-xs text-slate-500">
+              {new Date(note.created_at).toLocaleDateString('pl-PL')}
+            </p>
+          </div>
         ))}
       </div>
     </div>
