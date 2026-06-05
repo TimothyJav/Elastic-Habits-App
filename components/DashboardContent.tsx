@@ -16,8 +16,6 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import HabitList from '@/components/HabitList';
 import WeeklySummary from '@/components/WeeklySummary';
-import HabitChart from '@/components/HabitChart';
-import StreakCalendar from '@/components/StreakCalendar';
 import AddHabitForm from '@/components/AddHabitForm';
 import { DEMO_USER_ID } from '@/lib/demoUser';
 
@@ -161,19 +159,9 @@ export function DashboardContent({ habitsPromise }: DashboardContentProps) {
           <HabitList habits={habits} userId={DEMO_USER_ID} recommendedLevel={recommendedLevel} />
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.8fr)]">
-          <Card variant="default">
-            <WeeklySummary logs={allLogs} />
-          </Card>
-          <Card variant="default">
-            <StreakCalendar logs={allLogs} />
-          </Card>
-        </section>
-
         <section>
           <Card variant="default">
-            <h2 className="mb-4 text-lg font-semibold text-white">Rozkład poziomów</h2>
-            <HabitChart logs={allLogs} />
+            <WeeklySummary logs={allLogs} />
           </Card>
         </section>
 

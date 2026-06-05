@@ -79,4 +79,4 @@
 ## Usuwanie nawyków i historia per nawyk
 - **Status:** Wykonane
 - **Plan:** `PLAN_habit_delete_and_per_habit_history.md`
-- **Opis:** Karta nawyku ma przycisk usuwania z potwierdzeniem oraz mini historię ostatnich 28 dni dotyczącą wyłącznie tego konkretnego nawyku. Globalny kalendarz dashboardu jest opisany jako zbiorcza aktywność.
+- **Opis:** Karta nawyku ma przycisk usuwania z własnym dialogiem potwierdzenia oraz mini historię ostatnich 28 dni dotyczącą wyłącznie tego konkretnego nawyku. Zdublowany globalny kalendarz i osobny rozkład poziomów zostały usunięte z dołu dashboardu.

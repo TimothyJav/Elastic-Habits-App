@@ -6,7 +6,8 @@ Ułatwić zarządzanie nawykami i poprawić czytelność historii postępów. U�
 ## Zakres
 - Dodanie akcji usuwania nawyku z potwierdzeniem.
 - Dodanie mini historii ostatnich 28 dni na każdej karcie nawyku.
-- Doprecyzowanie etykiety globalnego kalendarza aktywności.
+- Usunięcie zdublowanego globalnego kalendarza aktywności.
+- Usunięcie zdublowanego wykresu rozkładu poziomów, gdy tę samą rolę pełni podsumowanie tygodnia.
 - Aktualizacja rejestrów SDD.
 
 Poza zakresem:
@@ -19,9 +20,11 @@ Poza zakresem:
 - Kliknięcie usuwania wymaga potwierdzenia.
 - Po potwierdzeniu nawyk jest usuwany z bazy razem z logami.
 - Każda karta nawyku pokazuje ostatnie 28 dni tylko dla tego nawyku.
-- Zbiorczy kalendarz dashboardu jest opisany jako globalna aktywność.
+- Pod listą nawyków nie ma drugiego globalnego podsumowania ostatnich 28 dni.
+- Dashboard nie dubluje podsumowania tygodnia osobnym wykresem rozkładu poziomów.
 
 ## Wymagania niefunkcjonalne
+- Komunikat potwierdzenia jest własnym elementem UI, a nie natywnym alertem przeglądarki.
 - Komunikat potwierdzenia nie powinien zawstydzać użytkownika.
 - Usuwanie nie może przypadkowo usuwać nawyków innego użytkownika.
 - UI pozostaje mobile-first i nie zwiększa tarcia codziennego oznaczania nawyku.
@@ -38,15 +41,18 @@ Poza zakresem:
 2. Dodać przycisk usuwania w karcie nawyku z potwierdzeniem.
 3. Odświeżyć dashboard po usunięciu.
 4. Dodać per-nawykową mini historię 28 dni.
-5. Zmienić etykietę globalnego kalendarza.
-6. Zaktualizować `implemented_plans.md` i `implemented_features.md`.
+5. Usunąć globalny kalendarz 28 dni spod listy nawyków.
+6. Usunąć zdublowany wykres rozkładu poziomów spod podsumowania tygodnia.
+7. Zaktualizować `implemented_plans.md` i `implemented_features.md`.
 
 ## Kryteria akceptacji
 - `npm run lint` przechodzi bez błędów.
 - `npm run typecheck` przechodzi.
 - `npm run test` przechodzi.
 - Usunięcie wymaga potwierdzenia.
+- Potwierdzenie usuwania nie używa natywnego komunikatu przeglądarki.
 - Historia w karcie nawyku nie miesza logów innych nawyków.
+- Pod listą nawyków zostaje jedno zbiorcze podsumowanie tygodnia.
 
 ## Testy
 - Uruchomić `npm run lint`.

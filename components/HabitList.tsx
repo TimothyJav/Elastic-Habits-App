@@ -58,6 +58,7 @@ export default function HabitList({
   const [currentLevels, setCurrentLevels] = useState<Record<string, CompletionLevel>>({});
   const [savingHabitId, setSavingHabitId] = useState<string | null>(null);
   const [deletingHabitId, setDeletingHabitId] = useState<string | null>(null);
+  const [habitToDelete, setHabitToDelete] = useState<Habit | null>(null);
 
   const today = todayKey();
 
@@ -78,19 +79,14 @@ export default function HabitList({
     }
   };
 
-  const handleDeleteHabit = async (habit: Habit) => {
-    const confirmed = window.confirm(
-      `Usunąć nawyk „${habit.title}”? Tej akcji nie trzeba robić teraz.`
-    );
-
-    if (!confirmed) {
-      return;
-    }
+  const handleDeleteHabit = async () => {
+    if (!habitToDelete) return;
 
     try {
-      setDeletingHabitId(habit.id);
-      await deleteHabit(habit.id, userId);
+      setDeletingHabitId(habitToDelete.id);
+      await deleteHabit(habitToDelete.id, userId);
       toast.success('Nawyk usunięty.');
+      setHabitToDelete(null);
       router.refresh();
     } catch (error) {
       toast.error('Nie udało się usunąć nawyku.');
@@ -108,21 +104,32 @@ export default function HabitList({
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
-      {habits.map(habit => (
-        <HabitCard
-          key={habit.id}
-          habit={habit}
-          today={today}
-          selectedLevel={currentLevels[habit.id]}
-          recommendedLevel={recommendedLevel}
-          isSaving={savingHabitId === habit.id}
-          isDeleting={deletingHabitId === habit.id}
-          onLevelChange={level => handleLevelChange(habit.id, level)}
-          onDelete={() => handleDeleteHabit(habit)}
+    <>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {habits.map(habit => (
+          <HabitCard
+            key={habit.id}
+            habit={habit}
+            today={today}
+            selectedLevel={currentLevels[habit.id]}
+            recommendedLevel={recommendedLevel}
+            isSaving={savingHabitId === habit.id}
+            isDeleting={deletingHabitId === habit.id}
+            onLevelChange={level => handleLevelChange(habit.id, level)}
+            onDelete={() => setHabitToDelete(habit)}
+          />
+        ))}
+      </div>
+
+      {habitToDelete && (
+        <DeleteHabitDialog
+          habitTitle={habitToDelete.title}
+          isDeleting={deletingHabitId === habitToDelete.id}
+          onCancel={() => setHabitToDelete(null)}
+          onConfirm={handleDeleteHabit}
         />
-      ))}
-    </div>
+      )}
+    </>
   );
 }
 
@@ -247,6 +254,54 @@ function HabitCard({
         </div>
       </div>
     </article>
+  );
+}
+
+function DeleteHabitDialog({
+  habitTitle,
+  isDeleting,
+  onCancel,
+  onConfirm,
+}: {
+  habitTitle: string;
+  isDeleting: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-sm">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-habit-title"
+        className="w-full max-w-sm rounded-2xl border border-slate-700 bg-slate-900 p-5 shadow-2xl"
+      >
+        <h2 id="delete-habit-title" className="text-lg font-bold text-white">
+          Usunąć ten nawyk?
+        </h2>
+        <p className="mt-2 text-sm text-slate-300">
+          „{habitTitle}” zniknie z listy razem z historią. Tej akcji nie trzeba robić teraz.
+        </p>
+        <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isDeleting}
+            className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Zostaw nawyk
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isDeleting}
+            className="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isDeleting ? 'Usuwanie...' : 'Usuń'}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
