@@ -58,6 +58,21 @@ export async function createHabit(formData: {
   return data;
 }
 
+export async function deleteHabit(habitId: string, userId: string) {
+  const { error } = await supabase
+    .from('habits')
+    .delete()
+    .eq('id', habitId)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('deleteHabit error:', error);
+    throw new Error(error.message);
+  }
+
+  revalidatePath('/dashboard');
+}
+
 export async function getHabits(userId: string) {
   const { data, error } = await supabase
     .from('habits')

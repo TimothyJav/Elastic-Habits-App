@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { CheckCircle2, Clock3, Flame, ShieldCheck } from 'lucide-react';
-import { logHabitCompletion } from '@/lib/habitActions';
+import { useRouter } from 'next/navigation';
+import { CheckCircle2, Clock3, Flame, ShieldCheck, X } from 'lucide-react';
+import { deleteHabit, logHabitCompletion } from '@/lib/habitActions';
 import { toast } from 'sonner';
 
 type CompletionLevel = 'full' | 'adjusted' | 'emergency';
@@ -42,13 +43,21 @@ const levelStyles: Record<CompletionLevel, string> = {
   emergency: 'border-green-500/30 bg-green-500/10 text-green-100 hover:border-green-400',
 };
 
+const historyColors: Record<CompletionLevel, string> = {
+  full: 'bg-violet-500',
+  adjusted: 'bg-blue-500',
+  emergency: 'bg-green-500',
+};
+
 export default function HabitList({
   habits,
   userId,
   recommendedLevel = 'adjusted',
 }: HabitListProps) {
+  const router = useRouter();
   const [currentLevels, setCurrentLevels] = useState<Record<string, CompletionLevel>>({});
   const [savingHabitId, setSavingHabitId] = useState<string | null>(null);
+  const [deletingHabitId, setDeletingHabitId] = useState<string | null>(null);
 
   const today = todayKey();
 
@@ -66,6 +75,27 @@ export default function HabitList({
       toast.error('Nie udało się zapisać postępu.');
     } finally {
       setSavingHabitId(null);
+    }
+  };
+
+  const handleDeleteHabit = async (habit: Habit) => {
+    const confirmed = window.confirm(
+      `Usunąć nawyk „${habit.title}”? Tej akcji nie trzeba robić teraz.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setDeletingHabitId(habit.id);
+      await deleteHabit(habit.id, userId);
+      toast.success('Nawyk usunięty.');
+      router.refresh();
+    } catch (error) {
+      toast.error('Nie udało się usunąć nawyku.');
+    } finally {
+      setDeletingHabitId(null);
     }
   };
 
@@ -87,7 +117,9 @@ export default function HabitList({
           selectedLevel={currentLevels[habit.id]}
           recommendedLevel={recommendedLevel}
           isSaving={savingHabitId === habit.id}
+          isDeleting={deletingHabitId === habit.id}
           onLevelChange={level => handleLevelChange(habit.id, level)}
+          onDelete={() => handleDeleteHabit(habit)}
         />
       ))}
     </div>
@@ -100,14 +132,18 @@ function HabitCard({
   selectedLevel,
   recommendedLevel,
   isSaving,
+  isDeleting,
   onLevelChange,
+  onDelete,
 }: {
   habit: Habit;
   today: string;
   selectedLevel?: CompletionLevel;
   recommendedLevel: CompletionLevel;
   isSaving: boolean;
+  isDeleting: boolean;
   onLevelChange: (level: CompletionLevel) => void;
+  onDelete: () => void;
 }) {
   const todayLog = habit.habit_logs?.find(log => log.completed_at === today);
   const visibleLevel = selectedLevel || todayLog?.level_achieved;
@@ -133,7 +169,7 @@ function HabitCard({
   return (
     <article className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl">
       <div className="mb-4 flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0 flex-1">
           <div className="mb-2 flex flex-wrap items-center gap-2">
             <h3 className="text-lg font-bold text-white">{habit.title}</h3>
             {visibleLevel ? (
@@ -152,6 +188,16 @@ function HabitCard({
             Rekomendacja na teraz: <span className="font-semibold text-green-300">{levelLabels[recommendedLevel]}</span>
           </p>
         </div>
+        <button
+          type="button"
+          onClick={onDelete}
+          disabled={isDeleting}
+          aria-label={`Usuń nawyk ${habit.title}`}
+          title="Usuń nawyk"
+          className="rounded-lg border border-slate-700 bg-slate-950/70 p-2 text-slate-400 transition hover:border-rose-400/60 hover:text-rose-200 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>
 
       <div className="grid gap-2">
@@ -178,6 +224,8 @@ function HabitCard({
         ))}
       </div>
 
+      <HabitHistory logs={habit.habit_logs || []} />
+
       <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-slate-400">
         <div className="rounded-lg bg-slate-950/70 p-2">
           <div className="flex items-center gap-1 text-slate-300">
@@ -199,5 +247,51 @@ function HabitCard({
         </div>
       </div>
     </article>
+  );
+}
+
+function HabitHistory({ logs }: { logs: HabitLog[] }) {
+  const levelsByDate = useMemo(() => {
+    const dates: Record<string, CompletionLevel> = {};
+
+    logs.forEach(log => {
+      dates[log.completed_at] = log.level_achieved;
+    });
+
+    return dates;
+  }, [logs]);
+
+  const days = useMemo(() => {
+    const today = new Date();
+
+    return Array.from({ length: 28 }, (_, index) => {
+      const date = new Date(today);
+      date.setDate(today.getDate() - (27 - index));
+
+      const dateKey = date.toISOString().split('T')[0];
+      const level = levelsByDate[dateKey];
+
+      return {
+        dateKey,
+        level,
+      };
+    });
+  }, [levelsByDate]);
+
+  return (
+    <div className="mt-4 space-y-2">
+      <div className="text-xs font-semibold uppercase text-slate-400">
+        Historia tego nawyku: 28 dni
+      </div>
+      <div className="grid grid-cols-7 gap-1">
+        {days.map(day => (
+          <div
+            key={day.dateKey}
+            title={`${day.dateKey}${day.level ? `: ${levelLabels[day.level]}` : ': brak wpisu'}`}
+            className={`h-3 rounded-sm ${day.level ? historyColors[day.level] : 'bg-slate-700/70'}`}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
