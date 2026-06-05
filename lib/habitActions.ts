@@ -97,7 +97,8 @@ export async function createHabitNote(formData: {
 
   if (error) {
     console.error('createHabitNote error:', error);
-    throw new Error(error.message);
+    const message = error.message || 'Nieznany błąd bazy danych';
+    throw new Error(`Nie udało się zapisać notatki: ${message}. Sprawdź czy tabela habit_notes istnieje w bazie.`);
   }
 
   revalidatePath('/dashboard');

@@ -120,7 +120,8 @@ export default function HabitList({
       toast.success('Notatka zapisana.');
       router.refresh();
     } catch (error) {
-      toast.error('Nie udało się zapisać notatki.');
+      const message = error instanceof Error ? error.message : 'Nieznany błąd';
+      toast.error(`Nie udało się zapisać notatki: ${message}`);
     } finally {
       setSavingNoteHabitId(null);
     }
