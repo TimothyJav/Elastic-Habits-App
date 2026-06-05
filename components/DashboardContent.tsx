@@ -39,12 +39,16 @@ export function DashboardContent({ habitsPromise }: DashboardContentProps) {
   const habits = use(habitsPromise);
   const [energy, setEnergy] = useState<EnergyLevel>('medium');
 
-  const allLogs = habits?.flatMap(habit =>
-    habit.habit_logs?.map((log: HabitLog) => ({
-      level_achieved: log.level_achieved,
-      completed_at: log.completed_at,
-    })) || []
-  ) || [];
+  const allLogs = useMemo(
+    () =>
+      habits?.flatMap(habit =>
+        habit.habit_logs?.map((log: HabitLog) => ({
+          level_achieved: log.level_achieved,
+          completed_at: log.completed_at,
+        })) || []
+      ) || [],
+    [habits]
+  );
 
   const stats = useMemo(() => {
     const today = todayKey();
