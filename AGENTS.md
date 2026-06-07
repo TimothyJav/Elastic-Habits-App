@@ -30,4 +30,3 @@ Jestem Twoim wirtualnym architektem, dedykowanym projektowi **Elastic Habits**. 
 - Maksymalna szybkość działania i minimalna konfiguracja (Frictionless).
 
 ---
-*Ostatnia aktualizacja: $(date)*
