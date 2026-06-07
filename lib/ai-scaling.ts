@@ -120,14 +120,72 @@ function findBlueprint(habitTitle: string) {
   );
 }
 
+// Poprawna polska odmiana słowa "minuta" zależnie od liczby.
+function polishMinutes(n: number): string {
+  if (n === 1) return 'minuta';
+  const lastTwo = n % 100;
+  const last = n % 10;
+  if (lastTwo >= 12 && lastTwo <= 14) return 'minut';
+  if (last >= 2 && last <= 4) return 'minuty';
+  return 'minut';
+}
+
+// Wykrywa czas trwania (np. "30 minut", "1 godzina") i resztę celu jako aktywność.
+function parseDuration(cleanTitle: string): { minutes: number; activity: string } | null {
+  const match = cleanTitle.match(
+    /(\d+)\s*(min(?:ut[ayęąi]*)?|godz(?:in[ayęąi]*)?|h)\b/i
+  );
+  if (!match) return null;
+
+  const value = parseInt(match[1], 10);
+  if (!Number.isFinite(value) || value <= 0) return null;
+
+  const unit = match[2].toLowerCase();
+  const isHours = unit.startsWith('godz') || unit === 'h';
+  const minutes = isHours ? value * 60 : value;
+
+  // Aktywność = cel bez fragmentu z czasem, oczyszczony z wiodących przyimków.
+  const activity = cleanTitle
+    .replace(match[0], ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/^(na|przez|po|do|z)\s+/i, '')
+    .trim();
+
+  return { minutes, activity };
+}
+
 function buildFallbackSuggestion(habitTitle: string): HabitLevelSuggestion {
   const cleanTitle = habitTitle.trim();
+  const duration = parseDuration(cleanTitle);
+
+  if (duration) {
+    const { minutes, activity } = duration;
+
+    // Adjusted ≈ 1/3 czasu (zaokrąglone do 5 min dla większych celów).
+    const adjustedMinutes =
+      minutes >= 15
+        ? Math.max(5, Math.round(minutes / 3 / 5) * 5)
+        : Math.max(2, Math.round(minutes / 2));
+    // Emergency = absolutne minimum, max 2 minuty.
+    const emergencyMinutes = Math.min(2, minutes);
+
+    const suffix = activity ? ` ${activity}` : '';
+
+    return {
+      title: cleanTitle,
+      full: cleanTitle,
+      adjusted: `${adjustedMinutes} ${polishMinutes(adjustedMinutes)}${suffix}`,
+      emergency: `${emergencyMinutes} ${polishMinutes(emergencyMinutes)}${suffix}`,
+      category: 'custom',
+      confidence: 'fallback',
+    };
+  }
 
   return {
     title: cleanTitle,
     full: cleanTitle,
-    adjusted: `Zrób mniejszą, 10-minutową wersję: ${cleanTitle}`,
-    emergency: `Zrób pierwszy widoczny krok związany z: ${cleanTitle}`,
+    adjusted: `Krótsza wersja: ${cleanTitle}`,
+    emergency: `Pierwszy mały krok: ${cleanTitle}`,
     category: 'custom',
     confidence: 'fallback',
   };
@@ -143,8 +201,8 @@ export function suggestHabitLevels(habitTitle: string): HabitLevelSuggestion | n
   }
 
   return {
-    title: blueprint.title,
-    full: blueprint.full,
+    title: cleanTitle,
+    full: cleanTitle,
     adjusted: blueprint.adjusted,
     emergency: blueprint.emergency,
     category: blueprint.category,

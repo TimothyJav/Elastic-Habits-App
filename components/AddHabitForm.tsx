@@ -76,16 +76,16 @@ export default function AddHabitForm({ userId }: { userId: string }) {
     try {
       const suggestion = suggestHabitLevels(title);
       setLevels({
-        full: suggestion?.full || title,
-        adjusted: suggestion?.adjusted || `Mniejsza wersja: ${title}`,
-        emergency: suggestion?.emergency || `Najmniejszy możliwy krok: ${title}`,
+        full: suggestion?.full || title.trim(),
+        adjusted: suggestion?.adjusted || `Krótsza wersja: ${title.trim()}`,
+        emergency: suggestion?.emergency || `Najmniejszy możliwy krok: ${title.trim()}`,
       });
       setSuggestionMeta(
         suggestion ? { category: suggestion.category, confidence: suggestion.confidence } : null
       );
       toast.success(
         suggestion?.confidence === 'fallback'
-          ? 'Przygotowałem bezpieczną wersję własną.'
+          ? 'Przygotowałem dopasowane, lżejsze poziomy.'
           : 'Poziomy dopasowane do kategorii. Możesz je edytować.'
       );
     } finally {
