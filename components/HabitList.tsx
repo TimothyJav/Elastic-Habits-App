@@ -572,13 +572,13 @@ function HabitNotes({ notes, onDeleteNote }: { notes: HabitNote[]; onDeleteNote:
         {latestNotes.map(note => (
           <div key={note.id} className="rounded-lg border border-slate-800 bg-slate-950/70 p-3">
             <div className="flex items-start justify-between gap-2">
-              <p className="text-sm leading-relaxed text-slate-200">{note.content}</p>
+              <p className="min-w-0 flex-1 whitespace-pre-wrap break-words text-sm leading-relaxed text-slate-200">{note.content}</p>
               <button
                 type="button"
                 onClick={() => onDeleteNote(note)}
                 aria-label={`Usuń notatkę z ${new Date(note.created_at).toLocaleDateString('pl-PL')}`}
                 title="Usuń notatkę"
-                className="rounded-lg border border-slate-700 bg-slate-950/70 p-1.5 text-slate-400 transition hover:border-rose-400/60 hover:text-rose-200"
+                className="shrink-0 rounded-lg border border-slate-700 bg-slate-950/70 p-1.5 text-slate-400 transition hover:border-rose-400/60 hover:text-rose-200"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
