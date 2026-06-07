@@ -8,3 +8,7 @@
 - [x] PLAN_ai_scaling_integration.md
 - [x] PLAN_ui_modernization.md
 - [x] PLAN_habit_level_edit.md
+- [x] PLAN_daily_focus_dashboard.md
+- [x] PLAN_reliable_habit_level_generation.md
+- [x] PLAN_habit_delete_and_per_habit_history.md
+- [x] PLAN_habit_progress_notes.md

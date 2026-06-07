@@ -22,7 +22,7 @@ export default function StreakCalendar({ logs }: StreakCalendarProps) {
     const bgColors: Record<string, string> = {
       full: 'bg-purple-600',
       adjusted: 'bg-secondary-600',
-      emergency: 'bg-emergency-600',
+      emergency: 'bg-green-600',
     };
 
     days.push(
@@ -36,7 +36,7 @@ export default function StreakCalendar({ logs }: StreakCalendarProps) {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-medium text-slate-300">Ostatnie 28 dni</h3>
+      <h3 className="text-sm font-medium text-slate-300">Aktywność z ostatnich 28 dni</h3>
       <div className="grid grid-cols-7 gap-2">
         {days}
       </div>

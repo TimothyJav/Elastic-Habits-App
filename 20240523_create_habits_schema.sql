@@ -1,45 +1,38 @@
-  -- Reset bazy danych (usuwa stare tabele, jeśli istnieją)
-  drop table if exists habit_logs;
-  drop table if exists habits;
+-- Schemat MVP dla trybu demo bez logowania.
+-- Wersja produkcyjna powinna ponownie podpiac user_id do auth.users i RLS.
 
-  -- Tabela nawyków z elastycznymi poziomami
-  create table habits (
-    id uuid default gen_random_uuid() primary key,
-    user_id uuid references auth.users not null,
-    title text not null,
-    level_full text not null,
-    level_adjusted text not null,
-    level_emergency text not null,
-    created_at timestamptz default now()
-  );
+drop table if exists habit_notes;
+drop table if exists habit_logs;
+drop table if exists habits;
 
-  -- Logi wykonania - kluczowe dla "No-Shame Streak"
-  create table habit_logs (
-    id uuid default gen_random_uuid() primary key,
-    habit_id uuid references habits on delete cascade not null,
-    user_id uuid references auth.users not null,
-    completed_at date default current_date,
-    level_achieved text check (level_achieved in ('full', 'adjusted', 'emergency')) not null,
-    -- Zapobiega dublowaniu wpisów tego samego dnia dla jednego nawyku
-    unique(habit_id, completed_at)
-  );
+create table habits (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid not null,
+  title text not null,
+  level_full text not null,
+  level_adjusted text not null,
+  level_emergency text not null,
+  created_at timestamptz default now()
+);
 
-  -- RLS (Row Level Security) - dostęp tylko dla właściciela
-  alter table habits enable row level security;
-  alter table habit_logs enable row level security;
+create table habit_logs (
+  id uuid default gen_random_uuid() primary key,
+  habit_id uuid references habits on delete cascade not null,
+  user_id uuid not null,
+  completed_at date default current_date,
+  level_achieved text check (level_achieved in ('full', 'adjusted', 'emergency')) not null,
+  unique(habit_id, completed_at)
+);
 
-  -- Polityki dla tabeli 'habits'
-  create policy "Users can manage their own habits"
-    on habits for all
-    using (auth.uid() = user_id)
-    with check (auth.uid() = user_id);
+create table habit_notes (
+  id uuid default gen_random_uuid() primary key,
+  habit_id uuid references habits on delete cascade not null,
+  user_id uuid not null,
+  content text not null,
+  created_at timestamptz default now()
+);
 
-  -- Polityki dla tabeli 'habit_logs'
-  create policy "Users can manage their own logs"
-    on habit_logs for all
-    using (auth.uid() = user_id)
-    with check (auth.uid() = user_id);
-
-  -- Opcjonalnie: Automatyczne przypisywanie user_id przy insercie (ułatwia pracę z Server Actions)
-  -- alter table habits alter column user_id set default auth.uid();
-  -- alter table habit_logs alter column user_id set default auth.uid();
+create index habits_user_id_idx on habits(user_id);
+create index habit_logs_user_id_idx on habit_logs(user_id);
+create index habit_notes_habit_id_idx on habit_notes(habit_id);
+create index habit_notes_user_id_idx on habit_notes(user_id);

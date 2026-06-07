@@ -26,7 +26,7 @@
 - API routes nie mają testów integracyjnych
 
 ### 3. E2E Tests — brak implementacji
-- Playwright wymieniony w `docs/roles/tester.md`, ale nie zainstalowany w `package.json`
+- Playwright wymieniony w `docs/roles/tester/README.md`, ale nie zainstalowany w `package.json`
 - Scenariusze zdefiniowane w `test_scenarios_e2e.md`
 
 ## ADHD-Specyficzne Wymagania Testowe

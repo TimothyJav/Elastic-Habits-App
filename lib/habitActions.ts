@@ -43,16 +43,82 @@ export async function createHabit(formData: {
       {
         user_id: formData.userId,
         title: formData.title,
-        full_goal: formData.fullGoal,
-        adjusted_goal: formData.adjustedGoal,
-        emergency_goal: formData.emergencyGoal,
+        level_full: formData.fullGoal,
+        level_adjusted: formData.adjustedGoal,
+        level_emergency: formData.emergencyGoal,
       },
     ])
     .select();
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error('createHabit error:', error);
+    throw new Error(error.message);
+  }
   revalidatePath('/dashboard');
   return data;
+}
+
+export async function deleteHabit(habitId: string, userId: string) {
+  const { error } = await supabase
+    .from('habits')
+    .delete()
+    .eq('id', habitId)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('deleteHabit error:', error);
+    throw new Error(error.message);
+  }
+
+  revalidatePath('/dashboard');
+}
+
+export async function createHabitNote(formData: {
+  habitId: string;
+  userId: string;
+  content: string;
+}) {
+  const content = formData.content.trim();
+
+  if (!content) {
+    throw new Error('Notatka nie może być pusta.');
+  }
+
+  const { data, error } = await supabase
+    .from('habit_notes')
+    .insert([
+      {
+        habit_id: formData.habitId,
+        user_id: formData.userId,
+        content,
+      },
+    ])
+    .select();
+
+  if (error) {
+    console.error('createHabitNote error:', error);
+    const message = error.message || 'Nieznany błąd bazy danych';
+    throw new Error(`Nie udało się zapisać notatki: ${message}. Sprawdź czy tabela habit_notes istnieje w bazie.`);
+  }
+
+  revalidatePath('/dashboard');
+  return data;
+}
+
+export async function deleteHabitNote(noteId: string, habitId: string, userId: string) {
+  const { error } = await supabase
+    .from('habit_notes')
+    .delete()
+    .eq('id', noteId)
+    .eq('habit_id', habitId)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('deleteHabitNote error:', error);
+    throw new Error(error.message);
+  }
+
+  revalidatePath('/dashboard');
 }
 
 export async function getHabits(userId: string) {
@@ -68,5 +134,27 @@ export async function getHabits(userId: string) {
     .eq('user_id', userId);
 
   if (error) throw new Error(error.message);
-  return data;
+
+  const habits = data || [];
+  const habitIds = habits.map(habit => habit.id);
+
+  if (habitIds.length === 0) {
+    return habits;
+  }
+
+  const { data: notes, error: notesError } = await supabase
+    .from('habit_notes')
+    .select('id, habit_id, content, created_at')
+    .eq('user_id', userId)
+    .in('habit_id', habitIds)
+    .order('created_at', { ascending: false });
+
+  if (notesError) {
+    return habits.map(habit => ({ ...habit, habit_notes: [] }));
+  }
+
+  return habits.map(habit => ({
+    ...habit,
+    habit_notes: (notes || []).filter(note => note.habit_id === habit.id),
+  }));
 }

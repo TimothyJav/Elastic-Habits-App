@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
+import { AppToaster } from "@/components/AppToaster";
 
 export const metadata: Metadata = {
   title: "Elastic Habits",
@@ -21,6 +22,7 @@ export default function RootLayout({
     <html lang="pl" className="dark">
       <body className="min-h-screen bg-slate-950 text-slate-100 antialiased">
         <div className="max-w-4xl mx-auto p-4 pb-20">{children}</div>
+        <AppToaster />
         
         <nav className="fixed bottom-0 left-0 right-0 bg-slate-900/80 backdrop-blur border-t border-slate-800">
           <div className="max-w-4xl mx-auto flex justify-around items-center py-2">

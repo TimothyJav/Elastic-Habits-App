@@ -55,3 +55,33 @@
 ## Edycja poziomów nawyków (PLAN_habit_level_edit.md)
 - **Status:** Wykonane
 - **Opis:** Użytkownik może ręcznie edytować wygenerowane przez AI poziomy FULL, ADJUSTED i EMERGENCY przed zapisaniem nawyku.
+
+## Zapis nawyków w trybie demo
+- **Status:** Wykonane
+- **Plan:** `PLAN_database_schema.md`
+- **Opis:** Formularz dodawania nawyku zapisuje dane do Supabase, odświeża dashboard po sukcesie i pokazuje komunikat systemowy.
+
+## Dzisiejszy panel fokusowy
+- **Status:** Wykonane
+- **Plan:** `PLAN_daily_focus_dashboard.md`
+- **Opis:** Dashboard pokazuje check-in energii, dzisiejszy plan, szybkie oznaczanie poziomów Full/Adjusted/Emergency, statystyki tygodnia oraz liczbę użyć Emergency jako pozytywnych momentów rescue.
+
+## Szablony dodawania nawyków
+- **Status:** Wykonane
+- **Plan:** `PLAN_daily_focus_dashboard.md`
+- **Opis:** Formularz dodawania nawyku zawiera gotowe szablony dla ruchu, sprzątania, nauki i snu oraz lokalne sugestie poziomów bez blokowania użytkownika na AI.
+
+## Stabilne generowanie poziomów nawyków
+- **Status:** Wykonane
+- **Plan:** `PLAN_reliable_habit_level_generation.md`
+- **Opis:** Sugestie poziomów są teraz deterministyczne: znane nawyki trafiają w stabilne kategorie, a nieznane cele dostają bezpieczny fallback oparty o treść użytkownika zamiast losowego szablonu.
+
+## Usuwanie nawyków i historia per nawyk
+- **Status:** Wykonane
+- **Plan:** `PLAN_habit_delete_and_per_habit_history.md`
+- **Opis:** Karta nawyku ma przycisk usuwania z własnym dialogiem potwierdzenia oraz mini historię ostatnich 28 dni dotyczącą wyłącznie tego konkretnego nawyku. Zdublowany globalny kalendarz i osobny rozkład poziomów zostały usunięte z dołu dashboardu.
+
+## Notatki postępu przy nawykach
+- **Status:** Wykonane
+- **Plan:** `PLAN_habit_progress_notes.md`
+- **Opis:** Pod historią każdego nawyku znajduje się przycisk „Dodaj notatkę”. Użytkownik może zapisać krótką refleksję o trudnościach, regularności lub przemyśleniach, a ostatnie notatki są widoczne na karcie właściwego nawyku.

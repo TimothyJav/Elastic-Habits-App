@@ -1,196 +1,286 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
+import { Sparkles } from 'lucide-react';
 import { createHabit } from '@/lib/habitActions';
-import { useAISuggestions } from '@/lib/ai-scaling';
+import { suggestHabitLevels } from '@/lib/ai-scaling';
+
+type HabitLevels = {
+  full: string;
+  adjusted: string;
+  emergency: string;
+};
+
+type SuggestionMeta = {
+  category: string;
+  confidence: 'high' | 'medium' | 'fallback';
+};
+
+const quickTemplates: Array<{ title: string; levels: HabitLevels }> = [
+  {
+    title: 'Ruch',
+    levels: {
+      full: '30 minut spaceru lub treningu',
+      adjusted: '10 minut lekkiego ruchu',
+      emergency: 'Załóż buty i stań przy drzwiach',
+    },
+  },
+  {
+    title: 'Sprzątanie',
+    levels: {
+      full: 'Posprzątaj jedno pomieszczenie',
+      adjusted: 'Ogarnij jedną widoczną powierzchnię',
+      emergency: 'Odłóż jedną rzecz na miejsce',
+    },
+  },
+  {
+    title: 'Nauka',
+    levels: {
+      full: '45 minut skupionej nauki',
+      adjusted: '15 minut powtórki',
+      emergency: 'Otwórz materiały i przeczytaj jedno zdanie',
+    },
+  },
+  {
+    title: 'Sen',
+    levels: {
+      full: 'Wieczorna rutyna bez telefonu przez 30 minut',
+      adjusted: 'Przygotuj łóżko i wycisz ekran',
+      emergency: 'Ustaw budzik i połóż telefon dalej',
+    },
+  },
+];
 
 export default function AddHabitForm({ userId }: { userId: string }) {
+  const router = useRouter();
   const [title, setTitle] = useState('');
-  const [levels, setLevels] = useState<{ full: string; adjusted: string; emergency: string } | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [levels, setLevels] = useState<HabitLevels | null>(null);
+  const [suggestionMeta, setSuggestionMeta] = useState<SuggestionMeta | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleGenerateAI = async () => {
-    if (!title) return;
-    setIsLoading(true);
+  const applyTemplate = (templateTitle: string, templateLevels: HabitLevels) => {
+    setTitle(templateTitle);
+    setLevels(templateLevels);
+    setSuggestionMeta({ category: templateTitle.toLowerCase(), confidence: 'high' });
+    toast.info('Szablon gotowy do edycji.');
+  };
+
+  const handleGenerateLevels = async () => {
+    if (!title.trim()) return;
+
+    setIsGenerating(true);
     try {
-      const { adjusted, emergency } = await generateAdjustedAndEmergencyLevels(title);
-      setLevels({
-        full: title,
-        adjusted,
-        emergency
-      });
-    } catch (error) {
-      const { suggestHabitLevels } = useAISuggestions();
       const suggestion = suggestHabitLevels(title);
-      if (suggestion) {
-        setLevels({
-          full: title,
-          adjusted: suggestion.adjusted,
-          emergency: suggestion.emergency
-        });
-        toast.info('Użyto szablonu offline');
-      } else {
-        toast.error("Wystąpił błąd podczas generowania przez AI.");
-      }
+      setLevels({
+        full: suggestion?.full || title.trim(),
+        adjusted: suggestion?.adjusted || `Krótsza wersja: ${title.trim()}`,
+        emergency: suggestion?.emergency || `Najmniejszy możliwy krok: ${title.trim()}`,
+      });
+      setSuggestionMeta(
+        suggestion ? { category: suggestion.category, confidence: suggestion.confidence } : null
+      );
+      toast.success(
+        suggestion?.confidence === 'fallback'
+          ? 'Przygotowałem dopasowane, lżejsze poziomy.'
+          : 'Poziomy dopasowane do kategorii. Możesz je edytować.'
+      );
     } finally {
-      setIsLoading(false);
+      setIsGenerating(false);
     }
   };
 
-  const handleLevelChange = (level: 'full' | 'adjusted' | 'emergency', value: string) => {
+  const handleLevelChange = (level: keyof HabitLevels, value: string) => {
     if (!levels) return;
     setLevels({ ...levels, [level]: value });
   };
 
   const handleSave = async () => {
-    if (!levels || !title) return;
+    if (!levels || !title.trim()) return;
+
     setIsSaving(true);
     try {
       await createHabit({
         userId,
-        title,
+        title: title.trim(),
         fullGoal: levels.full,
         adjustedGoal: levels.adjusted,
         emergencyGoal: levels.emergency,
       });
 
       confetti({
-        particleCount: 150,
+        particleCount: 120,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#4f46e5', '#10b981', '#f59e0b'],
-        zIndex: 999
+        colors: ['#22c55e', '#3b82f6', '#8b5cf6'],
+        zIndex: 999,
       });
 
       setTitle('');
       setLevels(null);
-      toast.success("Nawyk dodany pomyślnie!");
+      setSuggestionMeta(null);
+      router.refresh();
+      toast.success('Nawyk dodany. Masz od razu wersję Emergency.');
     } catch (error) {
-      toast.error("Błąd podczas zapisywania nawyku.");
+      toast.error('Nie udało się zapisać nawyku.');
     } finally {
       setIsSaving(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 rounded-xl shadow-md border border-slate-700">
-      <h2 className="text-xl font-bold mb-4 text-white">Nowy Elastyczny Nawyk</h2>
-      
-      <div className="space-y-4">
+    <div className="mx-auto max-w-2xl rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl sm:p-6">
+      <div className="mb-5 flex items-start gap-3">
+        <div className="rounded-lg bg-primary-500/15 p-2 text-primary-200">
+          <Sparkles className="h-5 w-5" />
+        </div>
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1">Co chcesz robić? (Poziom FULL)</label>
-          <input
-            type="text"
-            placeholder="np. Medytacja, Bieganie, Kodowanie..."
-            className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-slate-800 text-white outline-none"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <h3 className="text-lg font-bold text-white">Nowy elastyczny nawyk</h3>
+          <p className="mt-1 text-sm text-slate-400">
+            Zacznij od szablonu albo wpisz własny cel. Każdy poziom możesz poprawić przed zapisem.
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-5">
+        <div>
+          <label className="mb-2 block text-sm font-medium text-slate-300">
+            Szybkie szablony
+          </label>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {quickTemplates.map(template => (
+              <button
+                key={template.title}
+                type="button"
+                onClick={() => applyTemplate(template.title, template.levels)}
+                className="rounded-lg border border-slate-700 bg-slate-950/70 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-green-400 hover:text-green-100"
+              >
+                {template.title}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <button
-          onClick={handleGenerateAI}
-          disabled={isLoading || !title}
-          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50"
-        >
-          {isLoading ? '🤖 Generowanie...' : '✨ Wygeneruj poziomy z AI'}
-        </button>
+        <div>
+          <label className="mb-2 block text-sm font-medium text-slate-300">
+            Co chcesz robić?
+          </label>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <input
+              type="text"
+              placeholder="np. Medytacja, kodowanie, woda..."
+              className="min-h-11 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-4 py-2 text-white outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-500/30"
+              value={title}
+              onChange={event => setTitle(event.target.value)}
+            />
+            <button
+              type="button"
+              onClick={handleGenerateLevels}
+              disabled={isGenerating || !title.trim()}
+              className="min-h-11 rounded-lg bg-primary-600 px-4 py-2 font-semibold text-white transition hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isGenerating ? 'Tworzę...' : 'Ułóż poziomy'}
+            </button>
+          </div>
+        </div>
 
         {levels && (
-          <div className="mt-6 space-y-3 animate-in fade-in slide-in-from-top-4 duration-500">
-            <div className="p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
-              <span className="text-xs font-bold text-green-400 uppercase">Poziom FULL</span>
-<input
-                 type="text"
-                 className="w-full mt-1 px-2 py-1 text-sm bg-slate-800/50 border border-slate-600 rounded text-slate-100 outline-none focus:ring-1 focus:ring-primary-500"
-                 value={levels.full}
-                 onChange={(e) => handleLevelChange('full', e.target.value)}
-               />
-             </div>
-             
-             <div className="p-3 bg-secondary-900/20 border border-secondary-600/30 rounded-lg">
-               <span className="text-xs font-bold text-secondary-400 uppercase">Poziom ADJUSTED</span>
-               <input
-                 type="text"
-                 className="w-full mt-1 px-2 py-1 text-sm bg-slate-800/50 border border-slate-600 rounded text-slate-100 outline-none focus:ring-1 focus:ring-secondary-500"
-                 value={levels.adjusted}
-                 onChange={(e) => handleLevelChange('adjusted', e.target.value)}
-               />
-             </div>
+          <div className="space-y-3">
+            {suggestionMeta && (
+              <div className="rounded-xl border border-slate-700 bg-slate-950/70 p-3 text-sm text-slate-300">
+                <span className="font-semibold text-white">
+                  {suggestionMeta.confidence === 'fallback'
+                    ? 'Tryb ostrożny'
+                    : 'Dopasowany szablon'}
+                </span>
+                <span className="text-slate-400"> · {suggestionMeta.category}</span>
+                <p className="mt-1 text-xs text-slate-400">
+                  {suggestionMeta.confidence === 'fallback'
+                    ? 'Nie znalazłem pewnej kategorii, więc zachowałem Twój cel i zaproponowałem neutralne mniejsze kroki.'
+                    : 'Sugestia pochodzi ze stabilnej kategorii zamiast losowego przykładu.'}
+                </p>
+              </div>
+            )}
 
-             <div className="p-3 bg-emergency-900/20 border border-emergency-600/30 rounded-lg border-dashed">
-               <span className="text-xs font-bold text-emergency-400 uppercase">🚨 Poziom EMERGENCY</span>
-               <input
-                 type="text"
-                 className="w-full mt-1 px-2 py-1 text-sm bg-slate-800/50 border border-slate-600 rounded text-slate-100 outline-none focus:ring-1 focus:ring-emergency-500 font-medium"
-                 value={levels.emergency}
-                 onChange={(e) => handleLevelChange('emergency', e.target.value)}
-               />
-               <p className="text-[10px] text-emergency-300 mt-1 italic">Dla dni z najniższą energią.</p>
-             </div>
+            <LevelEditor
+              label="Full"
+              tone="violet"
+              value={levels.full}
+              onChange={value => handleLevelChange('full', value)}
+            />
+            <LevelEditor
+              label="Adjusted"
+              tone="blue"
+              value={levels.adjusted}
+              onChange={value => handleLevelChange('adjusted', value)}
+            />
+            <LevelEditor
+              label="Emergency"
+              tone="green"
+              value={levels.emergency}
+              helper="To nie jest porażka. To minimalny krok, który nadal podtrzymuje rytm."
+              onChange={value => handleLevelChange('emergency', value)}
+            />
 
-<div className="pt-4 flex gap-2">
-               <button
-                 onClick={handleSave}
-                 disabled={isSaving}
-                 className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl transition"
-               >
-                 {isSaving ? 'Zapisywanie...' : 'Zatwierdź i zacznij'}
-               </button>
-               <button
-                 onClick={() => setLevels(null)}
-                 className="px-4 py-2 text-sm text-slate-400 hover:text-slate-200"
-               >
-                 Anuluj
-               </button>
-             </div>
-           </div>
-         )}
-       </div>
-     </div>
-   );
- }
+            <div className="flex flex-col gap-2 pt-2 sm:flex-row">
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={isSaving}
+                className="min-h-12 flex-1 rounded-xl bg-green-600 px-4 py-3 font-bold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSaving ? 'Zapisuję...' : 'Zapisz nawyk'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLevels(null);
+                  setSuggestionMeta(null);
+                }}
+                className="min-h-12 rounded-xl border border-slate-700 px-4 py-3 font-semibold text-slate-300 transition hover:bg-slate-800"
+              >
+                Wyczyść poziomy
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
-async function generateAdjustedAndEmergencyLevels(fullLevel: string): Promise<{ adjusted: string; emergency: string }> {
-  const openaiModule = await import('openai');
-  const openai = new openaiModule.OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+function LevelEditor({
+  label,
+  tone,
+  value,
+  helper,
+  onChange,
+}: {
+  label: string;
+  tone: 'violet' | 'blue' | 'green';
+  value: string;
+  helper?: string;
+  onChange: (value: string) => void;
+}) {
+  const tones = {
+    violet: 'border-violet-500/30 bg-violet-500/10 text-violet-200',
+    blue: 'border-blue-500/30 bg-blue-500/10 text-blue-200',
+    green: 'border-green-500/30 bg-green-500/10 text-green-200',
+  };
 
-  const prompt = `
-    Jesteś ekspertem od ADHD i budowania nawyków. 
-    Użytkownik zdefiniował swój optymalny cel (POZIOM FULL) jako: "${fullLevel}".
-    Na podstawie tego celu, zdekomponuj go na dwa poziomy niższej trudności:
-    
-    1. Adjusted (Wersja pośrednia - około 50% energii wymaganej dla FULL)
-    2. Emergency (Absolutne minimum - około 1% energii, zajmuje maksymalnie 2 minuty)
-    
-    Zwróć odpowiedź WYŁĄCZNIE w formacie JSON:
-    {
-      "adjusted": "opis poziomu adjusted...",
-      "emergency": "opis poziomu emergency..."
-    }
-  `;
-
-  try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
-    });
-
-    const content = response.choices[0].message.content;
-    if (!content) throw new Error("Błąd generowania treści przez AI.");
-
-    return JSON.parse(content) as {
-      adjusted: string;
-      emergency: string;
-    };
-  } catch (error) {
-    console.error("OpenAI Error:", error);
-    throw new Error("Nie udało się wygenerować poziomów nawyku.");
-  }
+  return (
+    <div className={`rounded-xl border p-3 ${tones[tone]}`}>
+      <label className="text-xs font-bold uppercase tracking-wide">{label}</label>
+      <input
+        type="text"
+        className="mt-2 min-h-10 w-full rounded-lg border border-slate-700 bg-slate-950/70 px-3 py-2 text-sm text-white outline-none transition focus:border-primary-400"
+        value={value}
+        onChange={event => onChange(event.target.value)}
+      />
+      {helper && <p className="mt-2 text-xs text-green-100/80">{helper}</p>}
+    </div>
+  );
 }
