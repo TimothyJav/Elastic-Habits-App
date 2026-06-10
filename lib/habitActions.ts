@@ -3,10 +3,22 @@
 import { createClient } from '@supabase/supabase-js'; // Zakładając utilsy Supabase
 import { revalidatePath } from 'next/cache';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Czyści wartość zmiennej z przypadkowych spacji, cudzysłowów i końcowego ukośnika,
+// które przy wklejaniu do Vercel powodują błąd PostgREST "Invalid path specified in request URL".
+function cleanEnv(value: string | undefined): string {
+  return (value ?? '').trim().replace(/^["']|["']$/g, '').replace(/\/+$/, '');
+}
+
+const supabaseUrl = cleanEnv(process.env.NEXT_PUBLIC_SUPABASE_URL);
+const supabaseServiceKey = cleanEnv(process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  throw new Error(
+    'Brak konfiguracji Supabase: ustaw NEXT_PUBLIC_SUPABASE_URL i SUPABASE_SERVICE_ROLE_KEY w zmiennych środowiskowych.'
+  );
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function logHabitCompletion(
   habitId: string, 
