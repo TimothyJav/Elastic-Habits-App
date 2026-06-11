@@ -17,10 +17,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import HabitList from '@/components/HabitList';
 import WeeklySummary from '@/components/WeeklySummary';
 import AddHabitForm from '@/components/AddHabitForm';
-import { DEMO_USER_ID } from '@/lib/demoUser';
 
 interface DashboardContentProps {
   habitsPromise: ReturnType<typeof import('@/lib/habitActions').getHabits>;
+  userId: string;
 }
 
 type HabitLog = {
@@ -33,7 +33,7 @@ type CompletionLevel = 'full' | 'adjusted' | 'emergency';
 
 const todayKey = () => new Date().toISOString().split('T')[0];
 
-export function DashboardContent({ habitsPromise }: DashboardContentProps) {
+export function DashboardContent({ habitsPromise, userId }: DashboardContentProps) {
   const habits = use(habitsPromise);
   const [energy, setEnergy] = useState<EnergyLevel>('medium');
 
@@ -73,50 +73,48 @@ export function DashboardContent({ habitsPromise }: DashboardContentProps) {
     low: 'Emergency jest pełnoprawnym sukcesem. To się liczy.',
   };
 
-  if (habits?.length === 0) {
-    return (
-      <div className="min-h-screen bg-slate-950 px-4 py-6 text-slate-100 sm:px-8">
-        <div className="mx-auto w-full max-w-5xl space-y-6">
-          <header className="flex flex-col gap-2">
-            <Link href="/" className="text-sm font-medium text-primary-300 hover:text-primary-200">
-              Powrót
-            </Link>
+  const emptyState = (
+    <div className="min-h-screen bg-slate-950 px-4 py-6 text-slate-100 sm:px-8">
+      <div className="mx-auto w-full max-w-5xl space-y-6">
+        <header className="flex flex-col gap-2">
+          <Link href="/" className="text-sm font-medium text-primary-300 hover:text-primary-200">
+            Powrót
+          </Link>
+          <div>
+            <p className="text-sm font-medium text-green-300">Elastic Habits</p>
+            <h1 className="text-3xl font-bold text-white">Zacznij od jednego małego kroku</h1>
+            <p className="mt-2 max-w-2xl text-sm text-slate-400">
+              Pierwszy nawyk może mieć od razu wersję Full, Adjusted i Emergency.
+              Nie musisz wiedzieć wszystkiego przed startem.
+            </p>
+          </div>
+        </header>
+
+        <DailyEnergyCheckIn
+          energy={energy}
+          helperText={energyCopy[energy]}
+          onEnergyChange={setEnergy}
+        />
+
+        <Card id="dodaj-nawyk" variant="elevated" className="py-8">
+          <div className="mb-6 flex items-start gap-3">
+            <div className="rounded-lg bg-green-500/15 p-3 text-green-300">
+              <Sparkles className="h-6 w-6" />
+            </div>
             <div>
-              <p className="text-sm font-medium text-green-300">Elastic Habits</p>
-              <h1 className="text-3xl font-bold text-white">Zacznij od jednego małego kroku</h1>
-              <p className="mt-2 max-w-2xl text-sm text-slate-400">
-                Pierwszy nawyk może mieć od razu wersję Full, Adjusted i Emergency.
-                Nie musisz wiedzieć wszystkiego przed startem.
+              <h2 className="text-xl font-semibold text-white">Dodaj pierwszy nawyk</h2>
+              <p className="mt-1 text-sm text-slate-400">
+                Wybierz szablon albo wpisz własny cel. Emergency zostanie potraktowane jako sukces.
               </p>
             </div>
-          </header>
-
-          <DailyEnergyCheckIn
-            energy={energy}
-            helperText={energyCopy[energy]}
-            onEnergyChange={setEnergy}
-          />
-
-          <Card id="dodaj-nawyk" variant="elevated" className="py-8">
-            <div className="mb-6 flex items-start gap-3">
-              <div className="rounded-lg bg-green-500/15 p-3 text-green-300">
-                <Sparkles className="h-6 w-6" />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-white">Dodaj pierwszy nawyk</h2>
-                <p className="mt-1 text-sm text-slate-400">
-                  Wybierz szablon albo wpisz własny cel. Emergency zostanie potraktowane jako sukces.
-                </p>
-              </div>
-            </div>
-            <AddHabitForm userId={DEMO_USER_ID} />
-          </Card>
-        </div>
+          </div>
+          <AddHabitForm userId={userId} />
+        </Card>
       </div>
-    );
-  }
+    </div>
+  );
 
-  return (
+  const mainState = (
     <div className="min-h-screen bg-slate-950 px-4 py-6 text-slate-100 sm:px-8">
       <div className="mx-auto w-full max-w-6xl space-y-6">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -156,7 +154,7 @@ export function DashboardContent({ habitsPromise }: DashboardContentProps) {
               Jedno kliknięcie wystarczy, żeby zapisać dzisiejszy poziom.
             </p>
           </div>
-          <HabitList habits={habits} userId={DEMO_USER_ID} recommendedLevel={recommendedLevel} />
+          <HabitList habits={habits} userId={userId} recommendedLevel={recommendedLevel} />
         </section>
 
         <section>
@@ -172,11 +170,13 @@ export function DashboardContent({ habitsPromise }: DashboardContentProps) {
               Szablony pomagają zacząć bez wymyślania wszystkiego od zera.
             </p>
           </div>
-          <AddHabitForm userId={DEMO_USER_ID} />
+          <AddHabitForm userId={userId} />
         </section>
       </div>
     </div>
   );
+
+  return habits?.length === 0 ? emptyState : mainState;
 }
 
 function DailyEnergyCheckIn({

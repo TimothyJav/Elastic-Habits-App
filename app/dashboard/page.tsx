@@ -1,17 +1,27 @@
 import { getHabits } from '@/lib/habitActions';
 import { DashboardContent, DashboardSkeleton } from '@/components/DashboardContent';
 import { Suspense } from 'react';
-import { DEMO_USER_ID } from '@/lib/demoUser';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase-server';
 
 export const dynamic = 'force-dynamic';
 
-export default function ProgressBoardPage() {
-  const userId = DEMO_USER_ID;
+export default async function ProgressBoardPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user?.id) {
+    redirect('/login');
+  }
+
+  const userId = user.id;
   const habitsPromise = getHabits(userId).catch(() => [] as Awaited<ReturnType<typeof getHabits>>);
 
   return (
     <Suspense fallback={<DashboardSkeleton />}>
-      <DashboardContent habitsPromise={habitsPromise} />
+      <DashboardContent habitsPromise={habitsPromise} userId={userId} />
     </Suspense>
   );
 }

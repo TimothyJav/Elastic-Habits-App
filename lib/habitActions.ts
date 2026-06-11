@@ -1,30 +1,19 @@
 'use server';
 
-import { createClient } from '@supabase/supabase-js'; // Zakładając utilsy Supabase
+import { createClient } from '@/lib/supabase-server';
 import { revalidatePath } from 'next/cache';
 
-// Czyści wartość zmiennej z przypadkowych spacji, cudzysłowów i końcowego ukośnika,
-// które przy wklejaniu do Vercel powodują błąd PostgREST "Invalid path specified in request URL".
-function cleanEnv(value: string | undefined): string {
-  return (value ?? '').trim().replace(/^["']|["']$/g, '').replace(/\/+$/, '');
-}
-
-const supabaseUrl = cleanEnv(process.env.NEXT_PUBLIC_SUPABASE_URL);
-const supabaseServiceKey = cleanEnv(process.env.SUPABASE_SERVICE_ROLE_KEY);
-
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error(
-    'Brak konfiguracji Supabase: ustaw NEXT_PUBLIC_SUPABASE_URL i SUPABASE_SERVICE_ROLE_KEY w zmiennych środowiskowych.'
-  );
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Używamy klienta opartego na cookie (sesja użytkownika), a NIE klucza
+// serwisowego. Dzięki temu polityki RLS faktycznie obowiązują: auth.uid()
+// jest ustawione na zalogowanego (anonimowego) użytkownika, więc każdy widzi
+// i modyfikuje wyłącznie własne dane. Klucz serwisowy omijał RLS całkowicie.
 
 export async function logHabitCompletion(
-  habitId: string, 
-  userId: string, 
+  habitId: string,
+  userId: string,
   level: 'full' | 'adjusted' | 'emergency'
 ) {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('habit_logs')
     .upsert({
@@ -49,6 +38,7 @@ export async function createHabit(formData: {
   adjustedGoal: string;
   emergencyGoal: string;
 }) {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('habits')
     .insert([
@@ -71,6 +61,7 @@ export async function createHabit(formData: {
 }
 
 export async function deleteHabit(habitId: string, userId: string) {
+  const supabase = await createClient();
   const { error } = await supabase
     .from('habits')
     .delete()
@@ -96,6 +87,7 @@ export async function createHabitNote(formData: {
     throw new Error('Notatka nie może być pusta.');
   }
 
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('habit_notes')
     .insert([
@@ -118,6 +110,7 @@ export async function createHabitNote(formData: {
 }
 
 export async function deleteHabitNote(noteId: string, habitId: string, userId: string) {
+  const supabase = await createClient();
   const { error } = await supabase
     .from('habit_notes')
     .delete()
@@ -134,6 +127,7 @@ export async function deleteHabitNote(noteId: string, habitId: string, userId: s
 }
 
 export async function getHabits(userId: string) {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('habits')
     .select(`
