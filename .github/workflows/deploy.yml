@@ -7,15 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm ci
-      - run: npm run build
+      # Build odbywa sie na Vercel (vercel-action bez --prebuilt), wiec zmienne
+      # NEXT_PUBLIC_* z ustawien projektu Vercel sa dostepne podczas builda.
+      # --prod wrzuca deploy na produkcje, a nie tylko na Preview.
       - uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-args: '--prod'
           working-directory: .
