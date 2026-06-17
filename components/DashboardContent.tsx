@@ -7,7 +7,6 @@ import {
   Battery,
   CalendarCheck,
   HeartPulse,
-  Plus,
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
@@ -128,7 +127,6 @@ export function DashboardContent({ habitsPromise, userId }: DashboardContentProp
           </div>
           <Link href="#dodaj-nawyk">
             <Button className="w-full sm:w-auto">
-              <Plus className="mr-2 h-4 w-4" />
               Dodaj nawyk
             </Button>
           </Link>

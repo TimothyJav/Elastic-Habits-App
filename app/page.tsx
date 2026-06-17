@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, CalendarCheck, Plus, ShieldCheck, Sparkles } from 'lucide-react';
+import { CalendarCheck, ShieldCheck, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const highlights = [
@@ -41,13 +41,11 @@ export default function Home() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link href="/dashboard" className="block">
               <Button size="lg" className="w-full sm:w-auto">
-                Otwórz panel dzisiejszy
-                <ArrowRight className="ml-2 h-5 w-5" />
+                Otwórz dzisiejszy panel
               </Button>
             </Link>
             <Link href="/dashboard#dodaj-nawyk" className="block">
               <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                <Plus className="mr-2 h-5 w-5" />
                 Dodaj nawyk
               </Button>
             </Link>
